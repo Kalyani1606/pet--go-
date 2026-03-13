@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PETGO - Refined Pet Ride Booking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+            --primary-luxury: #2D2D2D;--accent-soft: #D4C9BD;--bg-beige: #F7F5F2;--card-white: #FFFFFF;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-beige);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-shadow {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04);
+        }
+        .luxury-pill {
+            border-radius: 9999px;
+        }
+    </style>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2D2D2D",
+                        beige: {
+                            50: "#FAF9F7",
+                            100: "#F7F5F2",
+                            200: "#E8E2DA",
+                            300: "#D4C9BD",
+                        }
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "2xl": "1.5rem",
+                        "3xl": "2rem",
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+<body class="text-slate-800 transition-colors duration-300">
+<nav class="border-b border-beige-200 bg-white/70 backdrop-blur-xl sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-[0.1em] text-primary">PETGO</span>
+<div class="hidden md:flex items-center gap-8 text-[13px] font-semibold uppercase tracking-widest text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-primary border-b border-primary/20 pb-1" href="#">Pet Ride</a>
+<a class="hover:text-primary transition-colors" href="#">Shop</a>
+<a class="hover:text-primary transition-colors" href="#">Services</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="p-2 rounded-full hover:bg-beige-100 transition-colors">
+<span class="material-symbols-outlined text-[22px] text-slate-400">search</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-beige-200 flex items-center justify-center overflow-hidden border border-white soft-shadow">
+<img alt="User Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiO0tzzVk1cVcK9lqWHKe97pJVzckqWWV3kcKX0HhuclLZU6Y6yvOC_JId6kYk5DDCQfolOHZz8bU7oo0pG7dyuoU12HU8tMPd4dIlkB4bqcy9xcnigp46B4AXZk5-jih4R2cNTtCCN1al5_fQ9eqaChH26WSQ6cwS3tnmbrdeUZZ7Ikdhzn2UePeDwwMzdj0qdpysUPaw4yzWoS1IhAVyN4cHdkk3emVH3FhbNtoRDD4UPlxm3iHXt1fvNZ93AjUGGzS_c7sX2YY"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-8 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
+<div class="lg:col-span-4 space-y-8">
+<div class="bg-white p-8 rounded-3xl soft-shadow border border-white/60">
+<header class="mb-8">
+<h1 class="text-2xl font-semibold tracking-tight text-slate-900 mb-1">
+                    Book a Pet Ride
+                </h1>
+<p class="text-sm text-slate-400">Premium door-to-door service</p>
+</header>
+<form class="space-y-6">
+<div class="space-y-2">
+<label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-beige-300"></span>
+                        Pickup Location
+                    </label>
+<div class="relative">
+<input class="w-full pl-11 pr-4 py-4 bg-beige-50 border border-beige-200 rounded-2xl focus:ring-1 focus:ring-beige-300 focus:border-beige-300 text-sm transition-all placeholder:text-slate-300" placeholder="Enter pickup address" type="text" value="128 Luxury Terrace, Upper West Side"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">location_on</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                        Destination
+                    </label>
+<div class="relative">
+<input class="w-full pl-11 pr-4 py-4 bg-beige-50 border border-beige-200 rounded-2xl focus:ring-1 focus:ring-beige-300 focus:border-beige-300 text-sm transition-all placeholder:text-slate-300" placeholder="Where to?" type="text"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+<span class="material-symbols-outlined text-xs">pets</span>
+                        Pet Details
+                    </label>
+<div class="grid grid-cols-2 gap-4">
+<select class="w-full bg-beige-50 border border-beige-200 rounded-2xl focus:ring-1 focus:ring-beige-300 text-sm py-4 transition-all appearance-none">
+<option>Dog (Large)</option>
+<option>Dog (Small)</option>
+<option>Cat</option>
+<option>Other</option>
+</select>
+<input class="w-full bg-beige-50 border border-beige-200 rounded-2xl focus:ring-1 focus:ring-beige-300 text-sm py-4 transition-all" min="1" placeholder="Count" type="number" value="1"/>
+</div>
+</div>
+<div class="pt-2 space-y-4">
+<label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Select Service</label>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 rounded-2xl border border-beige-300 bg-beige-50/50 cursor-pointer ring-1 ring-beige-300">
+<div class="flex items-center gap-4">
+<div class="p-2.5 bg-white rounded-xl soft-shadow">
+<span class="material-symbols-outlined text-primary text-[20px]">directions_car</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-800">Premium Comfort</p>
+<p class="text-[11px] text-slate-500">Luxury SUV for larger pets</p>
+</div>
+</div>
+<span class="font-bold text-sm text-slate-800">$24.50</span>
+</div>
+<div class="flex items-center justify-between p-4 rounded-2xl border border-beige-200 bg-white hover:bg-beige-50 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="p-2.5 bg-beige-100 rounded-xl">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">electric_car</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-800">Standard PetGo</p>
+<p class="text-[11px] text-slate-500">Electric sedan, eco-friendly</p>
+</div>
+</div>
+<span class="font-bold text-sm text-slate-400">$18.20</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-black text-white luxury-pill font-semibold py-4.5 text-[15px] shadow-xl shadow-primary/20 transition-all active:scale-[0.98] mt-6 flex items-center justify-center gap-2" type="button">
+                    Confirm Ride
+                </button>
+</form>
+</div>
+<div class="bg-primary rounded-3xl p-8 text-white relative overflow-hidden group soft-shadow">
+<div class="relative z-10">
+<span class="bg-white/10 text-beige-100 text-[10px] uppercase tracking-[0.2em] font-bold px-3 py-1.5 rounded-full mb-4 inline-block">Exclusive</span>
+<h3 class="text-xl font-medium tracking-tight mb-2">Weekend Retreat</h3>
+<p class="text-beige-300/80 text-sm leading-relaxed mb-6 max-w-[200px]">20% off all luxury rides to pet resorts through Sunday.</p>
+<button class="text-sm font-semibold flex items-center gap-2 hover:gap-3 transition-all border-b border-white/20 pb-1">
+                    Book Now <span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+<div class="absolute -right-12 -bottom-12 opacity-5 transform group-hover:scale-110 transition-transform duration-700">
+<span class="material-symbols-outlined text-[200px]">workspace_premium</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-8 relative h-[600px] lg:h-auto min-h-[600px] rounded-[2.5rem] overflow-hidden soft-shadow bg-beige-100 border border-white">
+<div class="absolute inset-0 grayscale-[0.6] opacity-60">
+<img alt="Map background" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOJOo_N0deFRJl1HqsXvVdZ6kS7NwpN-C38ufj1OzTuBBx0y_106Rj_ZizNRRb5PdgblS7IPPi8bpXx-bPL1jVWPWiEvuLQbxJ7WbBaZ4AUiZGIjijbNMY3x1CjGsHssUcGsNUBAHzc-G0Wn7ItvE9eB2WfSdQsggyk7lGPjMmBdQZ6pZCrm1MJY_9vs1dQSkn5skFaRmQ7ALrO8y3VzaQXfnObI4-NBt8LNtgP0ehbcLylIZaXQjlEQ0URb9MD38ZSdo3QYcJ3ME"/>
+</div>
+<div class="absolute inset-0 p-8 flex flex-col pointer-events-none">
+<div class="self-start flex items-center gap-3 bg-white/90 backdrop-blur-md px-5 py-2.5 rounded-full shadow-lg border border-white">
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-beige-300 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-slate-800"></span>
+</span>
+<span class="text-[11px] font-bold uppercase tracking-widest text-slate-800">Driver arriving in 4 mins</span>
+</div>
+<div class="mt-auto flex flex-col md:flex-row gap-6 items-end justify-between pointer-events-auto">
+<div class="w-full md:w-80 bg-white p-6 rounded-3xl soft-shadow border border-white/80">
+<div class="flex items-center gap-4 mb-6">
+<div class="relative">
+<img alt="Driver Profile" class="w-16 h-16 rounded-2xl object-cover border-2 border-white soft-shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLB78dStRXgpa3wgMj9rTlKtCjYqXv0eIIBmjK1B106htHW0ooVv4fsxKdi-fhiPIFD6VaFH6lsfDIiKqeewd4HlobuCMCy3n34mI1calSu_3vP28kIImRFiyC_33NhtLUjmYOUT0_bXRPT4_6pBAVWn5yGRtzXLI07t1rf580w8NnOOtrTJgZe9DkKIr8FGTYd10cD1tSPdnA0nPBBLN86ZppTtkKm3LOkR36EFvXL9FptI06kM-yG88LSRJgDBmUMHw6mYh_yCQ"/>
+<div class="absolute -bottom-2 -right-2 bg-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md text-slate-800">4.9 ★</div>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-900">Marcus Wilson</h4>
+<p class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Tesla Model Y • KLP-2024</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex items-center justify-center gap-2 py-3 rounded-2xl bg-beige-50 hover:bg-beige-100 transition-colors text-[13px] font-semibold text-slate-600">
+<span class="material-symbols-outlined text-lg">chat</span> Message
+                        </button>
+<button class="flex items-center justify-center gap-2 py-3 rounded-2xl bg-beige-50 hover:bg-beige-100 transition-colors text-[13px] font-semibold text-slate-600">
+<span class="material-symbols-outlined text-lg">call</span> Call
+                        </button>
+</div>
+</div>
+<div class="hidden md:flex bg-white/90 backdrop-blur-md p-5 rounded-3xl shadow-lg border border-white items-center gap-4">
+<div class="p-3 bg-beige-100 rounded-2xl">
+<span class="material-symbols-outlined text-primary">pets</span>
+</div>
+<div>
+<p class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Passenger</p>
+<p class="font-bold text-sm text-slate-800">Luna • Golden Retriever</p>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+<div class="absolute transform -translate-x-24 -translate-y-12">
+<div class="bg-white p-1 rounded-full shadow-xl border-2 border-beige-300">
+<div class="w-10 h-10 rounded-full bg-beige-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-beige-300 text-lg">location_on</span>
+</div>
+</div>
+</div>
+<div class="absolute transform translate-x-12 translate-y-8">
+<div class="relative">
+<div class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(45,45,45,0.4)] border-4 border-white transform -rotate-45">
+<span class="material-symbols-outlined">navigation</span>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-primary/10 rounded-full animate-pulse"></div>
+</div>
+</div>
+<svg class="absolute inset-0 w-full h-full opacity-20" preserveAspectRatio="none" viewBox="0 0 1000 1000">
+<path class="text-slate-500" d="M380 440 Q 450 480, 510 520" fill="transparent" stroke="currentColor" stroke-dasharray="8 6" stroke-width="3"></path>
+</svg>
+</div>
+</div>
+</main>
+<footer class="max-w-7xl mx-auto px-8 py-12 border-t border-beige-200 mt-10">
+<div class="flex flex-col md:flex-row items-center justify-between gap-10">
+<div class="space-y-2">
+<span class="text-xl font-bold tracking-widest text-primary opacity-40">PETGO</span>
+<p class="text-[11px] font-medium text-slate-400 uppercase tracking-[0.2em]">© 2024 Premium Pet Lifestyle Platform</p>
+</div>
+<div class="flex items-center gap-12">
+<div class="flex flex-col items-center">
+<span class="text-2xl font-semibold text-slate-800">12k+</span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-1">Safe Rides</span>
+</div>
+<div class="h-8 w-[1px] bg-beige-200"></div>
+<div class="flex flex-col items-center">
+<span class="text-2xl font-semibold text-slate-800">4.9/5</span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-1">Rating</span>
+</div>
+<div class="h-8 w-[1px] bg-beige-200"></div>
+<div class="flex flex-col items-center">
+<span class="text-2xl font-semibold text-slate-800">24/7</span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 mt-1">Concierge</span>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>

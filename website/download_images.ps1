@@ -1,0 +1,66 @@
+$images = @{
+    "dog_food_pedigree.jpg" = "https://unsplash.com/photos/_AJyvVIzSWE/download?force=true"
+    "dog_puppy_food.jpg" = "https://unsplash.com/photos/Qvbr5Uxgz_Q/download?force=true"
+    "dog_biscuits.jpg" = "https://unsplash.com/photos/trnW5lbxZZ4/download?force=true"
+    "dog_leash.jpg" = "https://unsplash.com/photos/GWbdOkPe2qs/download?force=true"
+    "dog_collar.jpg" = "https://unsplash.com/photos/sBeSFRuWb2M/download?force=true"
+    "dog_harness.jpg" = "https://unsplash.com/photos/hUatvF67v84/download?force=true"
+    "dog_bed.jpg" = "https://unsplash.com/photos/XfPN8PoSKM0/download?force=true"
+    "dog_chew_toy.jpg" = "https://unsplash.com/photos/JslEOWoO7ss/download?force=true"
+    "cat_food_whiskas.jpg" = "https://unsplash.com/photos/1V1xzKSqR14/download?force=true"
+    "cat_wet_food.jpg" = "https://unsplash.com/photos/fPZ99Y1_6v0/download?force=true"
+    "cat_treats.jpg" = "https://unsplash.com/photos/N05S5O_Xy4/download?force=true"
+    "cat_litter_box.jpg" = "https://unsplash.com/photos/_f_2-4vI_Sg/download?force=true"
+    "cat_litter_sand.jpg" = "https://unsplash.com/photos/oObe_t8p2fE/download?force=true"
+    "cat_scratching_post.jpg" = "https://unsplash.com/photos/4h9bMGfRqQc/download?force=true"
+    "cat_feather_toy.jpg" = "https://unsplash.com/photos/kbiwYB669HM/download?force=true"
+    "cat_bed.jpg" = "https://unsplash.com/photos/yIC2J4dAtzk/download?force=true"
+    "bird_seed_mix.jpg" = "https://unsplash.com/photos/KCc38-0X_pQ/download?force=true"
+    "bird_parrot_pellets.jpg" = "https://unsplash.com/photos/M5csNnUlqNv/download?force=true"
+    "bird_cage.jpg" = "https://unsplash.com/photos/rN_sWIr-NnM/download?force=true"
+    "bird_swing_toy.jpg" = "https://unsplash.com/photos/v-2Ncs-6x6s/download?force=true"
+    "bird_water_dispenser.jpg" = "https://unsplash.com/photos/nOswNl1uUfU/download?force=true"
+    "bird_cuttlefish_bone.jpg" = "https://unsplash.com/photos/KCc38-0X_pQ/download?force=true"
+    "fish_food_flakes.jpg" = "https://unsplash.com/photos/ay5_tLlnkL0/download?force=true"
+    "fish_aquarium_tank.jpg" = "https://unsplash.com/photos/h_WcSm7pXkU/download?force=true"
+    "fish_aquarium_filter.jpg" = "https://unsplash.com/photos/6LgQ_hI7GEY/download?force=true"
+    "fish_aquarium_air_pump.jpg" = "https://unsplash.com/photos/ay5_tLlnkL0/download?force=true"
+    "fish_aquarium_plants.jpg" = "https://unsplash.com/photos/avwdcJklaCA/download?force=true"
+    "fish_aquarium_light.jpg" = "https://unsplash.com/photos/JRlT45FWrFs/download?force=true"
+    "rabbit_food_pellets.jpg" = "https://unsplash.com/photos/o5JyQfuDDkQ/download?force=true"
+    "rabbit_hay.jpg" = "https://unsplash.com/photos/nJOfC_U-wDs/download?force=true"
+    "rabbit_water_bottle.jpg" = "https://unsplash.com/photos/wMXetxdXeZM/download?force=true"
+    "rabbit_chew_sticks.jpg" = "https://unsplash.com/photos/RrxI2L8aUuU/download?force=true"
+    "rabbit_cage.jpg" = "https://unsplash.com/photos/rN_sWIr-NnM/download?force=true"
+    "hamster_food_mix.jpg" = "https://unsplash.com/photos/wMXetxdXeZM/download?force=true"
+    "hamster_cage.jpg" = "https://unsplash.com/photos/wMXetxdXeZM/download?force=true"
+    "hamster_wheel.jpg" = "https://unsplash.com/photos/0oPZI-jcKmM/download?force=true"
+    "hamster_bedding.jpg" = "https://unsplash.com/photos/Oa9fM_M-_y8/download?force=true"
+    "hamster_chew_toy.jpg" = "https://unsplash.com/photos/wMXetxdXeZM/download?force=true"
+    "reptile_turtle_pellets.jpg" = "https://unsplash.com/photos/jlyVxTdadVc/download?force=true"
+    "reptile_turtle_tank.jpg" = "https://unsplash.com/photos/jlyVxTdadVc/download?force=true"
+    "reptile_uvb_lamp.jpg" = "https://unsplash.com/photos/b8KXgdFKVBY/download?force=true"
+    "reptile_heat_lamp.jpg" = "https://unsplash.com/photos/b8KXgdFKVBY/download?force=true"
+    "reptile_water_dish.jpg" = "https://unsplash.com/photos/JJ2kvXMrQD8/download?force=true"
+    "care_shampoo.jpg" = "https://unsplash.com/photos/yE5hlzDapEo/download?force=true"
+    "care_brush.jpg" = "https://unsplash.com/photos/IfK0QTOyTg/download?force=true"
+    "care_nail_clipper.jpg" = "https://unsplash.com/photos/ldIghI2FIA0/download?force=true"
+    "care_flea_spray.jpg" = "https://unsplash.com/photos/yE5hlzDapEo/download?force=true"
+    "care_travel_carrier.jpg" = "https://unsplash.com/photos/ZKY7_gzHlOI/download?force=true"
+    "care_first_aid_kit.jpg" = "https://unsplash.com/photos/R5qEmXedLSA/download?force=true"
+    "care_cleaning_wipes.jpg" = "https://unsplash.com/photos/ZKY7_gzHlOI/download?force=true"
+}
+
+$targetDir = "c:\Users\kalya\Downloads\stitch\website\product_images"
+
+foreach ($name in $images.Keys) {
+    $url = $images[$name]
+    $path = Join-Path $targetDir $name
+    Write-Host "Downloading $name from $url..."
+    try {
+        Invoke-WebRequest -Uri $url -OutFile $path -ErrorAction Stop
+        Write-Host "Success: $name saved to $path"
+    } catch {
+        Write-Error "Failed to download $name. Error: $_"
+    }
+}

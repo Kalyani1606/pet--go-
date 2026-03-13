@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PETGO | Premium Pet Lifestyle &amp; Services</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1A1C1E", // Dark Charcoal
+                        "background-light": "#F8F7F4", // Soft Beige/Grey
+                        "background-dark": "#0F1113",
+                        accent: "#D4B996", // Soft Gold/Tan
+                    },
+                    fontFamily: {
+                        display: ["'Plus Jakarta Sans'", "sans-serif"],
+                        sans: ["'Plus Jakarta Sans'", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                        'full': "9999px",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        .video-overlay {
+            background: linear-gradient(90deg, rgba(248, 247, 244, 0.9) 0%, rgba(248, 247, 244, 0.6) 50%, rgba(248, 247, 244, 0.2) 100%);
+        }
+        .dark .video-overlay {
+            background: linear-gradient(90deg, rgba(15, 17, 19, 0.95) 0%, rgba(15, 17, 19, 0.7) 50%, rgba(15, 17, 19, 0.3) 100%);
+        }
+        .glass-nav {
+            backdrop-filter: blur(12px);
+            background-color: rgba(248, 247, 244, 0.8);
+        }
+        .dark .glass-nav {
+            background-color: rgba(15, 17, 19, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-sans text-primary dark:text-gray-100 transition-colors duration-300">
+<nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800/50">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-2xl font-extrabold tracking-tight text-primary dark:text-white">PETGO</span>
+</div>
+<div class="hidden md:flex items-center space-x-10">
+<a class="text-sm font-semibold hover:text-accent transition-colors" href="#">Home</a>
+<a class="text-sm font-semibold hover:text-accent transition-colors" href="#">Services</a>
+<a class="text-sm font-semibold hover:text-accent transition-colors" href="#">About</a>
+<a class="text-sm font-semibold hover:text-accent transition-colors" href="#">Blog</a>
+<a class="text-sm font-semibold hover:text-accent transition-colors" href="#">Contact</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+<span class="material-icons-outlined text-2xl">search</span>
+</button>
+<button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+<span class="material-icons-outlined text-2xl">account_circle</span>
+</button>
+<button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors" id="theme-toggle">
+<span class="material-icons-outlined text-2xl dark:hidden">dark_mode</span>
+<span class="material-icons-outlined text-2xl hidden dark:inline">light_mode</span>
+</button>
+</div>
+</div>
+</nav>
+<section class="relative h-screen w-full flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Golden retriever and cat in a luxury living room" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7SSw-PgkQIj2q_2-YYhXVRLGsg4Vj6HA1KVqwd3JO7YKoYUR6MB86rI7l0veX9W8OJTPKT0ueLx8UN-OzL6RUFibm4zAJ9yVXpUA9zuJVCQaO8guK262gNnCBEfkhnkt3lSS3Y-vsfnnZhRwMfe1H8ZRY6v55L0nZEb2g-eIkQRoDzGWeEQQVKPsEmertGRI9uUFYt8N1VPRKKuIuZ5dfzd40pr8c2-zb5mnaaFKa041offigHg4ajP0Jv4LQg3Uwo3SGiQ1hOc8"/>
+<div class="video-overlay absolute inset-0"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-6 w-full pt-20">
+<div class="max-w-2xl">
+<span class="inline-block py-1 px-3 bg-accent/20 text-accent dark:text-accent rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+                    Luxury Pet Care
+                </span>
+<h1 class="text-6xl md:text-7xl font-extrabold text-primary dark:text-white leading-[1.1] mb-8">
+                    Everything Your <br/>Pet Needs
+                </h1>
+<p class="text-xl text-gray-700 dark:text-gray-300 mb-10 leading-relaxed max-w-lg">
+                    Safe rides, emergency care, and premium essentials for your furry companions. Tailored for the modern lifestyle.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-primary text-white px-10 py-5 rounded-full font-bold text-lg hover:bg-gray-800 transition-all transform hover:scale-[1.02] shadow-xl shadow-primary/10">
+                        Explore Services
+                    </button>
+<button class="bg-transparent border-2 border-primary/20 dark:border-white/20 px-10 py-5 rounded-full font-bold text-lg hover:bg-white/50 dark:hover:bg-white/5 transition-all transform hover:scale-[1.02]">
+                        Learn More
+                    </button>
+</div>
+<div class="mt-16 flex items-center gap-8 border-t border-primary/10 dark:border-white/10 pt-8 max-w-md">
+<div class="flex -space-x-3">
+<img alt="User profile" class="h-10 w-10 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSP7GVyPt6xw86_MY81s2DICE8NA3q0BFS2GBpnpB5iKhJAyjepyv3OZ_wtaneKxJo8VQllcj5nO0QdS4aMwNBl6PITNBfRyt0sLIe7cs4f3HlyL3sqkrOUeF8ndlNTTp5HT59sZK25GTGH7lJStRvhVY-uuaSuIFFb5fXFg7KjLsb68V8bPmEJk5ULLizpT7V5e5u_OJ-MPBM8FddwRJVtgh4FhU0Hs4hIyIoKoyFeyXq_qKGdKU_9aWOmwdurQBpnE4F1kZP3z8"/>
+<img alt="User profile" class="h-10 w-10 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtCCuf3R_iA1wfF_51LnmokHeWZd5F_QIRODIt7spgsPC_-tILo_PTVi2LQ9Kx_gUx7K2PoB6CoUn19fltxdqCfGZ4hppkgoefNj3pwbTMRXkKvW-m2tsW-BVFm2tIz6GfQj_8edKsVL57iZOIavZW_Qb5B8x1GLFgIV6RZYlqw84xZwJoBSODRh-W4PVkSTZ747BN6SHLXm16N6OMDSrgXqq38flC4n9rE1ozbsA1eq3M-SaeusZqx-BQL2llRGRp5S73ha6VH2E"/>
+<img alt="User profile" class="h-10 w-10 rounded-full border-2 border-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiMxb5f1LzLa-tbujCvLYvp3u_1QNexm6hw5_-NAJz3I79-g5Qrz35y_Y3OrFWQisqtY-F0AcrU2vk_TB1VC-lX6Xd9l1ptJdmsP5sjIqROVf56fd0ictshACWRAWJNvxJC-KPIxaj8xypHi--1XV55RzrgYSOTcNpM4jzOiZN3jt0aoNSiuAqPeK3o78LblsoHpBPWmMxvwD47097WAiCSy6xj7Vq5e8bQ4uUnSk2gLS8OSd3krI8E8SpUtI5G1oOPfAp0Wxbygo"/>
+</div>
+<div>
+<div class="flex text-accent">
+<span class="material-icons-outlined text-sm">star</span>
+<span class="material-icons-outlined text-sm">star</span>
+<span class="material-icons-outlined text-sm">star</span>
+<span class="material-icons-outlined text-sm">star</span>
+<span class="material-icons-outlined text-sm">star</span>
+</div>
+<p class="text-sm font-medium opacity-70">Join 2,500+ happy pets</p>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em]">Scroll</span>
+<span class="material-icons-outlined">expand_more</span>
+</div>
+</section>
+<section class="py-24 bg-white dark:bg-[#141618]">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="group cursor-pointer">
+<div class="w-16 h-16 bg-background-light dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent transition-colors duration-300">
+<span class="material-icons-outlined text-3xl group-hover:text-white">commute</span>
+</div>
+<h3 class="text-2xl font-bold mb-3">Premium Pet Rides</h3>
+<p class="text-gray-600 dark:text-gray-400 leading-relaxed">Luxury transportation for your pets, equipped with specialized safety harnesses and climate control.</p>
+</div>
+<div class="group cursor-pointer">
+<div class="w-16 h-16 bg-background-light dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent transition-colors duration-300">
+<span class="material-icons-outlined text-3xl group-hover:text-white">medical_services</span>
+</div>
+<h3 class="text-2xl font-bold mb-3">Emergency Care</h3>
+<p class="text-gray-600 dark:text-gray-400 leading-relaxed">24/7 priority access to leading veterinary specialists for total peace of mind in any situation.</p>
+</div>
+<div class="group cursor-pointer">
+<div class="w-16 h-16 bg-background-light dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent transition-colors duration-300">
+<span class="material-icons-outlined text-3xl group-hover:text-white">spa</span>
+</div>
+<h3 class="text-2xl font-bold mb-3">Premium Essentials</h3>
+<p class="text-gray-600 dark:text-gray-400 leading-relaxed">Curated selection of high-end accessories, food, and grooming products for the discerning pet owner.</p>
+</div>
+</div>
+</div>
+</section>
+<script>
+        // Dark mode toggle functionality
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const htmlElement = document.documentElement;
+        themeToggleBtn.addEventListener('click', () => {
+            htmlElement.classList.toggle('dark');
+        });
+        // Add some basic scroll interaction for the nav
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-sm');
+                nav.classList.remove('h-20');
+                nav.classList.add('h-16');
+            } else {
+                nav.classList.remove('shadow-sm');
+                nav.classList.remove('h-16');
+                nav.classList.add('h-20');
+            }
+        });
+    </script>
+
+</body></html>

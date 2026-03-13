@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PETGO | Ambulance Tracking</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#A34343",
+                        "background-light": "#F8F5F2",
+                        "background-dark": "#1A1A1A",
+                        "panel-light": "#FFFFFF",
+                        "panel-dark": "#262626",
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                        sans: ["Plus Jakarta Sans", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(248, 247, 244, 0.7);
+        }
+
+        .dark .glass-nav {
+            background: rgba(15, 17, 19, 0.7);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .leaflet-container {
+            background: transparent !important;
+        }
+
+        @keyframes siren-flash {
+
+            0%,
+            100% {
+                background: #A34343;
+            }
+
+            25% {
+                background: #ef4444;
+            }
+
+            50% {
+                background: #3b82f6;
+            }
+
+            75% {
+                background: #ef4444;
+            }
+        }
+
+        .siren-flash {
+            animation: siren-flash 1.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.9);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 1.5s ease-out infinite;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-down {
+            animation: slideDown 0.4s ease forwards;
+        }
+
+        .otp-digit {
+            width: 48px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            background: #f1f5f9;
+            border-radius: 12px;
+            color: #1e293b;
+            letter-spacing: 2px;
+        }
+
+        @keyframes countdown-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .countdown-pulse {
+            animation: countdown-pulse 1s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 min-h-screen transition-colors duration-300">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html"
+                class="text-2xl font-extrabold tracking-tight text-[#1A1C1E] dark:text-white uppercase">PETGO</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="index.html">Home</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="services.html">Services</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="about.html">About Us</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="contact.html">Contact Us</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
+                    onclick="document.documentElement.classList.toggle('dark')">
+                    <span class="material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                </button>
+                <a href="#"
+                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors">Sign
+                    In / Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 pt-28 pb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-screen">
+        <!-- Left Panel -->
+        <div class="lg:col-span-4 space-y-5">
+
+            <!-- PHASE 1: Searching / Dispatching -->
+            <div id="searching-phase">
+                <!-- Emergency banner -->
+                <div
+                    class="bg-primary text-white px-5 py-3 rounded-xl mb-5 flex items-center gap-3 shadow-lg shadow-primary/20">
+                    <div class="w-8 h-8 rounded-full siren-flash flex items-center justify-center">
+                        <span class="material-symbols-outlined text-white" style="font-size:18px;">emergency</span>
+                    </div>
+                    <div>
+                        <p class="font-bold text-sm">Emergency Dispatching</p>
+                        <p class="text-xs text-red-200">Locating nearest ambulance unit...</p>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-panel-light dark:bg-panel-dark p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                    <div class="text-center py-6">
+                        <!-- Animated ambulance icon -->
+                        <div class="relative w-28 h-28 mx-auto mb-6">
+                            <div class="absolute inset-0 rounded-full bg-primary/10 pulse-ring"></div>
+                            <div class="absolute inset-0 rounded-full bg-primary/5 pulse-ring"
+                                style="animation-delay: 0.5s;"></div>
+                            <div class="w-28 h-28 rounded-full bg-primary/10 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-primary"
+                                    style="font-size:48px;">ambulance</span>
+                            </div>
+                        </div>
+
+                        <h2 class="text-xl font-extrabold mb-2 text-slate-900 dark:text-white">Dispatching ambulance...
+                        </h2>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">We're connecting you with the nearest
+                            pet emergency unit. Help is on the way!</p>
+
+                        <!-- Progress dots -->
+                        <div class="flex items-center justify-center gap-2 mb-6">
+                            <div class="w-2.5 h-2.5 rounded-full bg-primary animate-bounce"
+                                style="animation-delay: 0s;"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-primary animate-bounce"
+                                style="animation-delay: 0.2s;"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-primary animate-bounce"
+                                style="animation-delay: 0.4s;"></div>
+                        </div>
+
+                        <!-- Trip summary -->
+                        <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 text-left space-y-2">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 rounded-full bg-green-500 flex-shrink-0"></div>
+                                <span id="display-pickup"
+                                    class="text-sm text-slate-700 dark:text-slate-300 truncate">Loading...</span>
+                            </div>
+                            <div class="border-l-2 border-dashed border-slate-300 dark:border-slate-600 h-3 ml-1.5">
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 rounded-full bg-primary flex-shrink-0"></div>
+                                <span id="display-destination"
+                                    class="text-sm text-slate-700 dark:text-slate-300 truncate">—</span>
+                            </div>
+                            <div
+                                class="flex items-center gap-4 mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                                <span id="display-size"
+                                    class="text-xs bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded-lg font-semibold text-slate-600 dark:text-slate-300">🐕
+                                    Medium</span>
+                                <span id="display-oxygen"
+                                    class="text-xs bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded-lg font-semibold text-slate-600 dark:text-slate-300">💨
+                                    O₂: No</span>
+                            </div>
+                        </div>
+
+                        <button onclick="window.location.href='ambulance.html'"
+                            class="mt-6 text-sm text-slate-400 hover:text-primary transition-colors flex items-center gap-1 mx-auto">
+                            <span class="material-symbols-outlined" style="font-size:16px;">close</span> Cancel Request
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHASE 2: Driver / Ambulance Arrived -->
+            <div id="driver-phase" class="hidden">
+                <!-- Confirmed banner -->
+                <div
+                    class="bg-green-500 text-white px-5 py-3 rounded-xl mb-4 flex items-center gap-3 slide-down shadow-lg shadow-green-500/20">
+                    <span class="material-symbols-outlined" style="font-size:22px;">check_circle</span>
+                    <div>
+                        <p class="font-bold text-sm">Ambulance Dispatched!</p>
+                        <p class="text-xs text-green-100">Emergency unit is heading to you</p>
+                    </div>
+                </div>
+
+                <!-- Driver / Paramedic card -->
+                <div
+                    class="bg-panel-light dark:bg-panel-dark p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 fade-in-up space-y-5">
+                    <!-- Paramedic info -->
+                    <div class="flex items-center gap-4">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=120&h=120&fit=crop&crop=face"
+                                alt="Paramedic"
+                                class="w-16 h-16 rounded-full object-cover border-3 border-white shadow-lg">
+                            <div
+                                class="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
+                                <span class="material-symbols-outlined text-white" style="font-size:12px;">check</span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-extrabold text-lg text-slate-900 dark:text-white">Dr. Priya Sharma</h3>
+                            <p class="text-xs text-slate-500">Certified Veterinary Paramedic</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="material-symbols-outlined text-yellow-500"
+                                    style="font-size:14px;">star</span>
+                                <span class="text-sm font-bold">4.9</span>
+                                <span class="text-slate-300">•</span>
+                                <span class="text-xs text-slate-500">800+ rescues</span>
+                            </div>
+                        </div>
+                        <div id="eta-badge" class="bg-primary/10 px-3 py-1.5 rounded-full countdown-pulse">
+                            <span class="text-primary font-bold text-sm">8 min</span>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle details -->
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
+                        <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Ambulance Unit
+                        </p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400"
+                                    style="font-size:18px;">ambulance</span>
+                                <div>
+                                    <p class="text-[10px] text-slate-400">Vehicle</p>
+                                    <p class="text-sm font-bold">Force Traveller ICU</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400"
+                                    style="font-size:18px;">palette</span>
+                                <div>
+                                    <p class="text-[10px] text-slate-400">Color</p>
+                                    <p class="text-sm font-bold">White + Red</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400"
+                                    style="font-size:18px;">pin</span>
+                                <div>
+                                    <p class="text-[10px] text-slate-400">Plate No.</p>
+                                    <p class="text-sm font-extrabold tracking-wider">DL 1C PG 5678</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-slate-400"
+                                    style="font-size:18px;">medical_services</span>
+                                <div>
+                                    <p class="text-[10px] text-slate-400">Equipment</p>
+                                    <p class="text-sm font-bold text-green-600">ICU Ready ✓</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Equipment tags -->
+                        <div class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+                            <span
+                                class="text-[10px] font-bold bg-blue-50 dark:bg-blue-900/20 text-blue-600 px-2 py-1 rounded-lg">💨
+                                O₂ Cylinder</span>
+                            <span
+                                class="text-[10px] font-bold bg-green-50 dark:bg-green-900/20 text-green-600 px-2 py-1 rounded-lg">🩺
+                                Vitals Monitor</span>
+                            <span
+                                class="text-[10px] font-bold bg-purple-50 dark:bg-purple-900/20 text-purple-600 px-2 py-1 rounded-lg">💉
+                                IV Line</span>
+                            <span
+                                class="text-[10px] font-bold bg-amber-50 dark:bg-amber-900/20 text-amber-600 px-2 py-1 rounded-lg">🩹
+                                Stretcher</span>
+                        </div>
+                    </div>
+
+                    <!-- OTP -->
+                    <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl p-5 text-white">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Verification
+                                    OTP</p>
+                                <p class="text-[11px] text-slate-500">Share this with the paramedic</p>
+                            </div>
+                            <span class="material-symbols-outlined text-slate-500" style="font-size:18px;">lock</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-3" id="otp-container">
+                            <div class="otp-digit">0</div>
+                            <div class="otp-digit">0</div>
+                            <div class="otp-digit">0</div>
+                            <div class="otp-digit">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Route -->
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4">
+                        <div class="flex items-start gap-3">
+                            <div class="flex flex-col items-center mt-1">
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                                <div class="w-0.5 h-8 bg-slate-300 dark:bg-slate-600"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-primary"></div>
+                            </div>
+                            <div class="flex-1 space-y-4">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Pickup</p>
+                                    <p id="route-pickup" class="text-sm font-bold truncate">Loading...</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Drop-off
+                                    </p>
+                                    <p id="route-destination" class="text-sm font-bold truncate">—</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button
+                            class="flex items-center justify-center gap-2 py-3.5 rounded-xl bg-primary/10 hover:bg-primary/20 transition-colors text-sm font-bold text-primary">
+                            <span class="material-symbols-outlined" style="font-size:18px;">call</span> Call Paramedic
+                        </button>
+                        <button
+                            class="flex items-center justify-center gap-2 py-3.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-sm font-bold">
+                            <span class="material-symbols-outlined" style="font-size:18px;">chat</span> Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Area -->
+        <div
+            class="lg:col-span-8 relative h-[600px] lg:h-auto min-h-[500px] rounded-2xl overflow-hidden shadow-sm bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <div id="map"></div>
+            <!-- ETA overlay -->
+            <div id="map-eta-overlay"
+                class="hidden absolute top-4 left-4 z-[1000] bg-white/95 dark:bg-slate-800/95 backdrop-blur px-5 py-3 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary" style="font-size:20px;">ambulance</span>
+                </div>
+                <div>
+                    <p class="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Ambulance ETA</p>
+                    <p id="map-eta-text" class="font-extrabold text-lg text-slate-900 dark:text-white">8 min</p>
+                </div>
+                <div class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse ml-1"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let map, pickupMarker, destinationMarker, ambulanceMarker;
+
+        // Read URL params
+        const params = new URLSearchParams(window.location.search);
+        const pickupName = params.get('pickup') || 'Connaught Place, New Delhi';
+        const destName = params.get('destination') || '';
+        const pickupLat = parseFloat(params.get('plat')) || 28.6315;
+        const pickupLon = parseFloat(params.get('plon')) || 77.2167;
+        const destLat = parseFloat(params.get('dlat')) || 0;
+        const destLon = parseFloat(params.get('dlon')) || 0;
+        const animalSize = params.get('size') || 'medium';
+        const oxygenReq = params.get('oxygen') === 'true';
+
+        // Fill display info
+        document.getElementById('display-pickup').textContent = pickupName;
+        document.getElementById('display-destination').textContent = destName || 'Not specified';
+        const sizeEmojis = { small: '🐱 Small', medium: '🐕 Medium', large: '🐕‍🦺 Large' };
+        document.getElementById('display-size').textContent = sizeEmojis[animalSize] || '🐕 Medium';
+        document.getElementById('display-oxygen').textContent = oxygenReq ? '💨 O₂: Yes' : '💨 O₂: No';
+
+        function createNumberedIcon(number, color) {
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="position:relative;width:30px;height:42px;">
+                    <svg viewBox="0 0 30 42" width="30" height="42" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 0C6.716 0 0 6.716 0 15c0 10.688 15 27 15 27s15-16.312 15-27C30 6.716 23.284 0 15 0z" fill="${color}" stroke="${color === '#22c55e' ? '#16a34a' : '#7f1d1d'}" stroke-width="1"/>
+                        <circle cx="15" cy="14" r="8" fill="white"/>
+                        <text x="15" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="${color}" font-family="Arial, sans-serif">${number}</text>
+                    </svg>
+                </div>`,
+                iconSize: [30, 42], iconAnchor: [15, 42]
+            });
+        }
+
+        function createAmbulanceIcon() {
+            return L.divIcon({
+                className: 'ambulance-marker',
+                html: `<div style="position:relative;">
+                    <div style="width:48px;height:48px;background:#A34343;border-radius:50%;border:4px solid white;box-shadow:0 4px 15px rgba(163,67,67,0.4);display:flex;align-items:center;justify-content:center;">
+                        <span class="material-symbols-outlined" style="color:white;font-size:24px;">ambulance</span>
+                    </div>
+                    <div style="position:absolute;top:-6px;right:-6px;background:#22c55e;width:16px;height:16px;border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;">
+                        <span class="material-symbols-outlined" style="color:white;font-size:8px;">navigation</span>
+                    </div>
+                </div>`,
+                iconSize: [48, 48], iconAnchor: [24, 24]
+            });
+        }
+
+        function initMap() {
+            map = L.map('map', { zoomControl: true, attributionControl: false }).setView([pickupLat, pickupLon], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+            // Pickup marker
+            pickupMarker = L.marker([pickupLat, pickupLon], { icon: createNumberedIcon('1', '#22c55e') })
+                .addTo(map).bindPopup('<b>🟢 Pickup:</b> ' + pickupName);
+
+            // Destination marker if set
+            if (destLat && destLon && destName) {
+                destinationMarker = L.marker([destLat, destLon], { icon: createNumberedIcon('2', '#A34343') })
+                    .addTo(map).bindPopup('<b>🏥 Drop:</b> ' + destName);
+
+                const group = new L.featureGroup([pickupMarker, destinationMarker]);
+                map.fitBounds(group.getBounds().pad(0.3));
+                fetchRoute(pickupLat, pickupLon, destLat, destLon);
+            } else {
+                map.setView([pickupLat, pickupLon], 14);
+            }
+        }
+
+        async function fetchRoute(lat1, lon1, lat2, lon2) {
+            try {
+                const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                if (data.routes && data.routes.length > 0) {
+                    const coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                    L.polyline(coords, { color: '#A34343', weight: 8, opacity: 0.3, lineJoin: 'round', lineCap: 'round' }).addTo(map);
+                    L.polyline(coords, { color: '#A34343', weight: 5, opacity: 0.9, lineJoin: 'round', lineCap: 'round' }).addTo(map);
+                }
+            } catch (e) {
+                L.polyline([[lat1, lon1], [lat2, lon2]], { color: '#A34343', weight: 5, opacity: 0.9 }).addTo(map);
+            }
+        }
+
+        // Simulate ambulance approaching
+        function simulateAmbulanceApproach() {
+            const offsetLat = pickupLat + (Math.random() > 0.5 ? 0.02 : -0.02);
+            const offsetLon = pickupLon + (Math.random() > 0.5 ? 0.02 : -0.02);
+            ambulanceMarker = L.marker([offsetLat, offsetLon], { icon: createAmbulanceIcon() }).addTo(map);
+
+            let step = 0;
+            const totalSteps = 80;
+            const latDiff = (pickupLat - offsetLat) / totalSteps;
+            const lonDiff = (pickupLon - offsetLon) / totalSteps;
+
+            const interval = setInterval(() => {
+                step++;
+                const newLat = offsetLat + latDiff * step;
+                const newLon = offsetLon + lonDiff * step;
+                ambulanceMarker.setLatLng([newLat, newLon]);
+
+                // Update ETA
+                const etaMin = Math.max(1, Math.round((totalSteps - step) / 10));
+                document.getElementById('eta-badge').innerHTML = `<span class="text-primary font-bold text-sm">${etaMin} min</span>`;
+                document.getElementById('map-eta-text').textContent = etaMin + ' min';
+
+                if (step >= totalSteps) {
+                    clearInterval(interval);
+                    document.getElementById('eta-badge').innerHTML = `<span class="text-green-600 font-extrabold text-sm">Arrived!</span>`;
+                    document.getElementById('eta-badge').classList.remove('countdown-pulse');
+                    document.getElementById('map-eta-text').textContent = 'Arrived!';
+
+                    // Show arrived banner
+                    const banner = document.createElement('div');
+                    banner.className = 'bg-green-500 text-white px-5 py-3 rounded-xl flex items-center gap-3 shadow-lg shadow-green-500/20 slide-down mt-4';
+                    banner.innerHTML = `<span class="material-symbols-outlined" style="font-size:22px;">where_to_vote</span>
+                        <div><p class="font-bold text-sm">Ambulance Has Arrived!</p><p class="text-xs text-green-100">The paramedic is at your pickup location</p></div>`;
+                    document.getElementById('driver-phase').appendChild(banner);
+                }
+            }, 500);
+        }
+
+        // Phase transition
+        function showDriverArrived() {
+            document.getElementById('searching-phase').classList.add('hidden');
+            document.getElementById('driver-phase').classList.remove('hidden');
+            document.getElementById('map-eta-overlay').classList.remove('hidden');
+
+            document.getElementById('route-pickup').textContent = pickupName;
+            document.getElementById('route-destination').textContent = destName || 'Not specified';
+
+            // Generate OTP
+            const otp = Math.floor(1000 + Math.random() * 9000).toString();
+            document.querySelectorAll('.otp-digit').forEach((d, i) => { d.textContent = otp[i]; });
+
+            simulateAmbulanceApproach();
+        }
+
+        // Init
+        window.onload = () => {
+            initMap();
+            // Simulate dispatch after 5 seconds
+            setTimeout(showDriverArrived, 5000);
+        };
+    </script>
+</body>
+
+</html>

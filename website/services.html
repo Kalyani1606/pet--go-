@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PETGO | Our Services</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1A1C1E",
+                        "background-light": "#F8F7F4",
+                        "background-dark": "#0F1113",
+                        accent: "#D4B996",
+                    },
+                    fontFamily: {
+                        display: ["'Plus Jakarta Sans'", "sans-serif"],
+                        sans: ["'Plus Jakarta Sans'", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(248, 247, 244, 0.7);
+        }
+
+        .dark .glass-nav {
+            background: rgba(15, 17, 19, 0.7);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 2rem;
+        }
+
+        .dark .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-sans text-primary dark:text-gray-100 transition-colors duration-300">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between font-sans">
+            <div class="flex items-center gap-2">
+                <a href="index.html"
+                    class="text-2xl font-extrabold tracking-tight text-[#1A1C1E] dark:text-white uppercase transition-colors"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">PETGO</a>
+            </div>
+            <div class="hidden md:flex items-center space-x-8" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="index.html">Home</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="services.html">Services</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="about.html">About Us</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="contact.html">Contact Us</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors hidden sm:block text-[#1A1C1E] dark:text-gray-100">
+                    <span class="material-icons-outlined material-symbols-outlined text-2xl">search</span>
+                </button>
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
+                    onclick="document.documentElement.classList.toggle('dark')">
+                    <span
+                        class="material-icons-outlined material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span
+                        class="material-icons-outlined material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                </button>
+                <a href="#"
+                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative min-h-screen pt-32 pb-24 px-6 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=2069"
+                class="w-full h-full object-cover opacity-10 dark:opacity-5 grayscale" alt="Bakground">
+        </div>
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-primary dark:text-white mb-4">Our Specialty Services
+                </h1>
+                <p class="text-gray-500 dark:text-gray-400 max-w-2xl mx-auto text-lg leading-relaxed">Experience a new
+                    standard of pet care with our premium urban mobility and emergency solutions.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Ride Booking -->
+                <div
+                    class="glass-card overflow-hidden group hover:scale-[1.02] transition-all duration-500 shadow-2xl shadow-black/5">
+                    <div class="h-64 overflow-hidden">
+                        <img src="images/ride.png"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            alt="Ride Booking">
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="material-icons-outlined text-accent text-3xl">local_taxi</span>
+                            <h3 class="text-2xl font-bold">Ride Booking</h3>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">Luxury door-to-door
+                            transportation for your pets with climate-controlled comfort and specialized safety
+                            features.</p>
+                        <a href="ride-booking-1.html"
+                            class="inline-flex items-center gap-2 text-primary dark:text-white font-bold hover:text-accent dark:hover:text-accent transition-colors">
+                            Book a Ride <span class="material-icons-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Ambulance Booking -->
+                <div
+                    class="glass-card overflow-hidden group hover:scale-[1.02] transition-all duration-500 shadow-2xl shadow-black/5">
+                    <div class="h-64 overflow-hidden">
+                        <img src="images/ambulance.png"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            alt="Ambulance Booking">
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="material-icons-outlined text-accent text-3xl">medical_services</span>
+                            <h3 class="text-2xl font-bold">Ambulance</h3>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">24/7 dedicated pet emergency
+                            ambulance service. Priority medical transport with trained handlers on board.</p>
+                        <a href="ambulance.html"
+                            class="inline-flex items-center gap-2 text-primary dark:text-white font-bold hover:text-accent dark:hover:text-accent transition-colors">
+                            Call Urgent <span class="material-icons-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Essentials -->
+                <div
+                    class="glass-card overflow-hidden group hover:scale-[1.02] transition-all duration-500 shadow-2xl shadow-black/5">
+                    <div class="h-64 overflow-hidden">
+                        <img src="images/pet shop.jpg"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            alt="Essentials Store">
+                    </div>
+                    <div class="p-8">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="material-icons-outlined text-accent text-3xl">shopping_bag</span>
+                            <h3 class="text-2xl font-bold">Essentials</h3>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">High-end curated boutique
+                            featuring premium food, designer accessories, and luxury wellness products.</p>
+                        <a href="store.html"
+                            class="inline-flex items-center gap-2 text-primary dark:text-white font-bold hover:text-accent dark:hover:text-accent transition-colors">
+                            Visit Shop <span class="material-icons-outlined">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer"
+        class="bg-background-dark dark:bg-background-dark border-t border-gray-200/10 dark:border-gray-800 pt-32 pb-16 transition-colors duration-300 text-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="index.html"
+                        class="text-2xl font-extrabold tracking-tight text-white dark:text-white uppercase mb-6 block">PETGO</a>
+                    <p class="text-gray-400 dark:text-gray-400 leading-relaxed max-w-xs">
+                        Redefining urban pet mobility and care through luxury services and premium essentials.
+                    </p>
+                    <div class="flex gap-4 mt-8">
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5c0-1.99 1.4-3 3.23-3 .88 0 1.77.15 1.77.15v2h-1c-1 0-1.31.62-1.31 1.25V12h2.25l-.36 3H13v6.8c4.56-.93 8-4.96 8-9.8z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.063 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.063-2.633-.333-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.778 6.98 6.978 1.28.058 1.688.072 4.948.072s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Services
+                    </h5>
+                    <ul class="space-y-4 text-sm text-gray-400 dark:text-gray-400">
+                        <li><a href="ride-booking-1.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Ride Booking</a></li>
+                        <li><a href="ambulance.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Emergency
+                                Ambulance</a></li>
+                        <li><a href="store.html" class="hover:text-white dark:hover:text-white transition-colors">Pet
+                                Essentials</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Company
+                    </h5>
+                    <ul class="space-y-4 text-sm text-gray-400 dark:text-gray-400">
+                        <li><a href="about.html" class="hover:text-white dark:hover:text-white transition-colors">About
+                                Us</a>
+                        </li>
+                        <li><a href="#" class="hover:text-white dark:hover:text-white transition-colors">Our Team</a>
+                        </li>
+                        <li><a href="#" class="hover:text-white dark:hover:text-white transition-colors">Impact</a>
+                        </li>
+                        <li><a href="contact.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Newsletter
+                    </h5>
+                    <p class="text-sm text-gray-400 dark:text-gray-400 mb-6">Join our mailing list for news and
+                        exclusive offers.</p>
+                    <div class="relative group">
+                        <input type="email" id="newsletter-email" placeholder="Email address"
+                            class="w-full bg-white/5 border border-white/12 rounded-full px-6 py-4 text-sm text-white placeholder:text-gray-500 focus:ring-2 focus:ring-accent/50 focus:border-accent focus:bg-white/10 transition-all outline-none">
+                        <button onclick="signupNewsletter()"
+                            class="absolute right-1.5 top-1.5 bottom-1.5 px-6 bg-white text-primary rounded-full text-[10px] font-black hover:bg-accent hover:text-primary transition-all tracking-widest active:scale-95 shadow-lg shadow-black/20">JOIN</button>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="border-t border-gray-100 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[12px] text-gray-400">© 2024 PETGO Urban Pet Ecosystem. All rights reserved.</p>
+                <div class="flex gap-8 text-[12px] text-gray-400">
+                    <a href="#" class="hover:text-white dark:hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white dark:hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add some basic scroll interaction for the nav
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-sm');
+                nav.classList.remove('h-20');
+                nav.classList.add('h-16');
+            } else {
+                nav.classList.remove('shadow-sm');
+                nav.classList.remove('h-16');
+                nav.classList.add('h-20');
+            }
+        });
+
+        async function signupNewsletter() {
+            const emailInput = document.getElementById('newsletter-email');
+            const email = emailInput.value.trim();
+            if (!email) {
+                alert('Please enter your email');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/newsletter', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Thanks for joining!');
+                    emailInput.value = '';
+                } else {
+                    alert(data.error || 'Signup failed');
+                }
+            } catch (error) {
+                console.error('Newsletter error:', error);
+                alert('Connection error');
+            }
+        }
+    </script>
+
+</body>
+
+</html>

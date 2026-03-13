@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PETGO - Pet Ride Booking &amp; Tracking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#E05D5D", // Muted red as requested
+                        "background-light": "#F9FAFB",
+                        "background-dark": "#111827",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#1F2937",
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "1rem",
+                        "xl": "1.5rem",
+                    },
+                },
+            },
+        };
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .map-gradient {
+            background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,0.05) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300">
+<nav class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">PETGO</span>
+<div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-primary" href="#">Pet Ride</a>
+<a class="hover:text-primary transition-colors" href="#">Shop</a>
+<a class="hover:text-primary transition-colors" href="#">Services</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" onclick="document.documentElement.classList.toggle('dark')">
+<span class="material-icons-outlined text-xl">dark_mode</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden border-2 border-white dark:border-slate-800 shadow-sm">
+<img alt="User Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiO0tzzVk1cVcK9lqWHKe97pJVzckqWWV3kcKX0HhuclLZU6Y6yvOC_JId6kYk5DDCQfolOHZz8bU7oo0pG7dyuoU12HU8tMPd4dIlkB4bqcy9xcnigp46B4AXZk5-jih4R2cNTtCCN1al5_fQ9eqaChH26WSQ6cwS3tnmbrdeUZZ7Ikdhzn2UePeDwwMzdj0qdpysUPaw4yzWoS1IhAVyN4cHdkk3emVH3FhbNtoRDD4UPlxm3iHXt1fvNZ93AjUGGzS_c7sX2YY"/>
+</div>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+<div class="lg:col-span-4 space-y-6">
+<div class="bg-card-light dark:bg-card-dark p-8 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
+<h1 class="text-2xl font-bold mb-6 flex items-center gap-2">
+<span class="material-icons-outlined text-primary">local_taxi</span>
+                    Book a Pet Ride
+                </h1>
+<form class="space-y-5">
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-2">
+<span class="material-icons-outlined text-xs text-green-500">radio_button_checked</span>
+                            Pickup Location
+                        </label>
+<div class="relative">
+<input class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-sm transition-all" placeholder="Enter pickup address" type="text" value="128 Luxury Terrace, Upper West Side"/>
+<span class="material-icons-outlined absolute left-3 top-3 text-slate-400 text-lg">my_location</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-2">
+<span class="material-icons-outlined text-xs text-primary">place</span>
+                            Destination
+                        </label>
+<div class="relative">
+<input class="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-sm transition-all" placeholder="Where to?" type="text"/>
+<span class="material-icons-outlined absolute left-3 top-3 text-slate-400 text-lg">search</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-semibold text-slate-600 dark:text-slate-400 flex items-center gap-2">
+<span class="material-icons-outlined text-xs">pets</span>
+                            Pet Details
+                        </label>
+<div class="grid grid-cols-2 gap-3">
+<select class="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-sm py-3 transition-all">
+<option>Dog (Large)</option>
+<option>Dog (Small)</option>
+<option>Cat</option>
+<option>Other</option>
+</select>
+<input class="w-full bg-slate-50 dark:bg-slate-900 border-none rounded-lg focus:ring-2 focus:ring-primary/20 text-sm py-3 transition-all" min="1" placeholder="Count" type="number" value="1"/>
+</div>
+</div>
+<div class="pt-4 space-y-3">
+<label class="text-sm font-semibold text-slate-600 dark:text-slate-400">Select Service</label>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-3 rounded-lg border-2 border-primary bg-primary/5 cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-icons-outlined text-primary">directions_car</span>
+</div>
+<div>
+<p class="text-sm font-bold">Premium Comfort</p>
+<p class="text-xs text-slate-500">Luxury SUV for larger pets</p>
+</div>
+</div>
+<span class="font-bold text-sm">$24.50</span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg">
+<span class="material-icons-outlined text-slate-500">electric_car</span>
+</div>
+<div>
+<p class="text-sm font-bold">Standard PetGo</p>
+<p class="text-xs text-slate-500">Electric sedan, eco-friendly</p>
+</div>
+</div>
+<span class="font-bold text-sm">$18.20</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-red-600 text-white font-bold py-4 rounded-lg shadow-lg shadow-primary/20 transition-all active:scale-[0.98] mt-4" type="button">
+                        Confirm Ride
+                    </button>
+</form>
+</div>
+<div class="bg-slate-900 rounded-xl p-6 text-white relative overflow-hidden group">
+<div class="relative z-10">
+<span class="bg-primary/20 text-primary-light text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded mb-2 inline-block">Special Offer</span>
+<h3 class="text-lg font-bold">Weekend Getaway</h3>
+<p class="text-slate-400 text-sm mb-4">Get 20% off all rides to pet resorts this weekend.</p>
+<button class="text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">Claim Now <span class="material-icons-outlined text-sm">arrow_forward</span></button>
+</div>
+<div class="absolute -right-8 -bottom-8 opacity-20 transform group-hover:scale-110 transition-transform duration-500">
+<span class="material-icons-outlined text-[120px]">loyalty</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-8 relative h-[600px] lg:h-auto min-h-[500px] rounded-xl overflow-hidden shadow-inner bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-800">
+<div class="absolute inset-0 opacity-80 dark:opacity-40 grayscale-[0.5]">
+<img alt="Abstract map pattern" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOJOo_N0deFRJl1HqsXvVdZ6kS7NwpN-C38ufj1OzTuBBx0y_106Rj_ZizNRRb5PdgblS7IPPi8bpXx-bPL1jVWPWiEvuLQbxJ7WbBaZ4AUiZGIjijbNMY3x1CjGsHssUcGsNUBAHzc-G0Wn7ItvE9eB2WfSdQsggyk7lGPjMmBdQZ6pZCrm1MJY_9vs1dQSkn5skFaRmQ7ALrO8y3VzaQXfnObI4-NBt8LNtgP0ehbcLylIZaXQjlEQ0URb9MD38ZSdo3QYcJ3ME"/>
+</div>
+<div class="absolute inset-0 p-6 flex flex-col pointer-events-none">
+<div class="mt-auto pointer-events-auto flex flex-col md:flex-row gap-4 items-end justify-between">
+<div class="absolute top-6 left-6 flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-slate-100 dark:border-slate-800">
+<span class="flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+</span>
+<span class="text-xs font-bold uppercase tracking-wider">Driver arriving in 4 mins</span>
+</div>
+<div class="w-full md:w-80 bg-white dark:bg-slate-900 p-5 rounded-xl shadow-2xl border border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-4 mb-4">
+<div class="relative">
+<img alt="Driver Profile" class="w-14 h-14 rounded-full object-cover border-2 border-white dark:border-slate-800" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLB78dStRXgpa3wgMj9rTlKtCjYqXv0eIIBmjK1B106htHW0ooVv4fsxKdi-fhiPIFD6VaFH6lsfDIiKqeewd4HlobuCMCy3n34mI1calSu_3vP28kIImRFiyC_33NhtLUjmYOUT0_bXRPT4_6pBAVWn5yGRtzXLI07t1rf580w8NnOOtrTJgZe9DkKIr8FGTYd10cD1tSPdnA0nPBBLN86ZppTtkKm3LOkR36EFvXL9FptI06kM-yG88LSRJgDBmUMHw6mYh_yCQ"/>
+<div class="absolute -bottom-1 -right-1 bg-yellow-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white dark:border-slate-900">4.9 ★</div>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-slate-900 dark:text-white">Marcus Wilson</h4>
+<p class="text-xs text-slate-500">Silver Tesla Model Y • KLP-2024</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-sm font-semibold">
+<span class="material-icons-outlined text-lg">chat_bubble_outline</span> Message
+                            </button>
+<button class="flex items-center justify-center gap-2 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors text-sm font-semibold">
+<span class="material-icons-outlined text-lg">call</span> Call
+                            </button>
+</div>
+</div>
+<div class="hidden md:flex flex-col gap-3 pointer-events-auto">
+<div class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md p-4 rounded-xl shadow-lg border border-slate-100 dark:border-slate-800 flex items-center gap-4">
+<div class="p-3 bg-primary/10 rounded-full">
+<span class="material-icons-outlined text-primary">pets</span>
+</div>
+<div>
+<p class="text-[10px] uppercase font-bold text-slate-500">Passenger</p>
+<p class="font-bold text-sm">Luna (Golden Retriever)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+<div class="absolute transform -translate-x-20 -translate-y-10 group">
+<div class="bg-white dark:bg-slate-900 p-1 rounded-full shadow-lg scale-75 group-hover:scale-100 transition-transform duration-300 border-2 border-green-500">
+<div class="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center">
+<span class="material-icons-outlined text-green-500 text-sm">my_location</span>
+</div>
+</div>
+</div>
+<div class="absolute transform translate-x-10 translate-y-10 transition-all duration-1000">
+<div class="relative">
+<div class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl border-2 border-white dark:border-slate-800 transform -rotate-45">
+<span class="material-icons-outlined">navigation</span>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-primary/20 rounded-full animate-pulse"></div>
+</div>
+</div>
+<svg class="absolute inset-0 w-full h-full opacity-30" preserveAspectRatio="none" viewBox="0 0 1000 1000">
+<path class="text-slate-600 dark:text-slate-400" d="M420 480 Q 480 500, 520 540" fill="transparent" stroke="currentColor" stroke-dasharray="10 6" stroke-width="4"></path>
+</svg>
+</div>
+</div>
+</main>
+<footer class="max-w-7xl mx-auto px-6 py-8 border-t border-slate-200 dark:border-slate-800 mt-8">
+<div class="flex flex-wrap items-center justify-between gap-6 opacity-60">
+<p class="text-xs font-medium">© 2024 PETGO Lifestyle Platform. All rights reserved.</p>
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<span class="text-lg font-bold">12k+</span>
+<span class="text-[10px] uppercase font-semibold">Safe Rides</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-lg font-bold">4.9/5</span>
+<span class="text-[10px] uppercase font-semibold">Rating</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-lg font-bold">24/7</span>
+<span class="text-[10px] uppercase font-semibold">Support</span>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>

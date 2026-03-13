@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PETGO | Book Pet Ambulance</title>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#A34343",
+                        accent: "#D4B996",
+                        "background-light": "#F8F5F2",
+                        "background-dark": "#1A1A1A",
+                        "panel-light": "#FFFFFF",
+                        "panel-dark": "#262626",
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                        sans: ["Plus Jakarta Sans", "sans-serif"],
+                    },
+                    borderRadius: { DEFAULT: "1.5rem", xl: "2rem" },
+                },
+            },
+        };
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(248, 247, 244, 0.7);
+        }
+
+        .dark .glass-nav {
+            background: rgba(15, 17, 19, 0.7);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .leaflet-container {
+            background: transparent !important;
+        }
+
+        .location-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        .dark .location-suggestions {
+            background: #262626;
+            border-color: #404040;
+        }
+
+        .suggestion-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .suggestion-item:hover {
+            background: #f1f5f9;
+        }
+
+        .dark .suggestion-item:hover {
+            background: #333;
+        }
+
+        @keyframes pulse-emergency {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(163, 67, 67, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 0 12px rgba(163, 67, 67, 0);
+            }
+        }
+
+        .pulse-emergency {
+            animation: pulse-emergency 2s ease-in-out infinite;
+        }
+
+        .oxygen-toggle {
+            position: relative;
+            width: 52px;
+            height: 28px;
+        }
+
+        .oxygen-toggle input {
+            display: none;
+        }
+
+        .oxygen-toggle .slider {
+            position: absolute;
+            inset: 0;
+            background: #cbd5e1;
+            border-radius: 28px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .oxygen-toggle .slider::before {
+            content: '';
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .oxygen-toggle input:checked+.slider {
+            background: #22c55e;
+        }
+
+        .oxygen-toggle input:checked+.slider::before {
+            transform: translateX(24px);
+        }
+
+        .size-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .size-card:hover {
+            border-color: #A34343;
+        }
+
+        .size-card.active {
+            border-color: #A34343;
+            background: rgba(163, 67, 67, 0.05);
+            box-shadow: 0 0 0 2px rgba(163, 67, 67, 0.2);
+        }
+
+        .hospital-card {
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .hospital-card:hover {
+            border-color: #A34343;
+            transform: translateY(-1px);
+        }
+
+        .hospital-card.selected {
+            border-color: #A34343;
+            background: rgba(163, 67, 67, 0.03);
+            box-shadow: 0 0 0 2px rgba(163, 67, 67, 0.15);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 transition-colors duration-300">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between font-sans">
+            <div class="flex items-center gap-2">
+                <a href="index.html"
+                    class="text-2xl font-extrabold tracking-tight text-[#1A1C1E] dark:text-white uppercase transition-colors"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">PETGO</a>
+            </div>
+            <div class="hidden md:flex items-center space-x-8" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="index.html">Home</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="services.html">Services</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="about.html">About Us</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="contact.html">Contact Us</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
+                    onclick="document.documentElement.classList.toggle('dark')">
+                    <span class="material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                </button>
+                <a href="#"
+                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors">Sign
+                    In / Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 pt-28 pb-16 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Left Panel: Booking Form -->
+        <div class="lg:col-span-5 space-y-6">
+            <!-- Header -->
+            <div class="bg-primary/10 dark:bg-primary/20 p-6 rounded-2xl border border-primary/20">
+                <div class="flex items-center gap-4 mb-3">
+                    <div class="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center pulse-emergency">
+                        <span class="material-symbols-outlined text-white text-2xl">emergency</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white">Book Pet Ambulance</h1>
+                        <p class="text-sm text-primary font-semibold">24/7 Emergency Response • Avg. 8-12 min ETA</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Form -->
+            <div
+                class="bg-panel-light dark:bg-panel-dark p-7 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                <form class="space-y-5" onsubmit="return false;">
+                    <!-- Pickup Location -->
+                    <div class="space-y-2">
+                        <label
+                            class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-green-500"
+                                style="font-size:16px;">radio_button_checked</span>
+                            Pickup Location
+                        </label>
+                        <div class="relative">
+                            <input id="pickup-input" autocomplete="off"
+                                class="w-full pl-10 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                                placeholder="Enter pickup address" type="text" />
+                            <span class="material-symbols-outlined absolute left-3 top-3.5 text-slate-400"
+                                style="font-size:18px;">my_location</span>
+                            <div id="pickup-suggestions" class="location-suggestions hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- Drop Location -->
+                    <div class="space-y-2">
+                        <label
+                            class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary"
+                                style="font-size:16px;">location_on</span>
+                            Drop Location <span class="text-[10px] font-normal normal-case text-slate-400">(Hospital /
+                                Clinic / Home)</span>
+                        </label>
+                        <div class="relative">
+                            <input id="destination-input" autocomplete="off"
+                                class="w-full pl-10 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all"
+                                placeholder="Where to take your pet?" type="text" />
+                            <span class="material-symbols-outlined absolute left-3 top-3.5 text-slate-400"
+                                style="font-size:18px;">search</span>
+                            <div id="destination-suggestions" class="location-suggestions hidden"></div>
+                        </div>
+                    </div>
+
+                    <hr class="border-slate-100 dark:border-slate-800">
+
+                    <!-- Animal Size -->
+                    <div class="space-y-3">
+                        <label
+                            class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                            <span class="material-symbols-outlined" style="font-size:16px;">pets</span>
+                            Animal Size
+                        </label>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="size-card p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 text-center"
+                                onclick="selectSize(this, 'small')">
+                                <div class="text-2xl mb-1">🐱</div>
+                                <p class="text-xs font-bold text-slate-700 dark:text-slate-300">Small</p>
+                                <p class="text-[10px] text-slate-400">Cat, Puppy, Bird</p>
+                            </div>
+                            <div class="size-card p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 text-center active"
+                                onclick="selectSize(this, 'medium')">
+                                <div class="text-2xl mb-1">🐕</div>
+                                <p class="text-xs font-bold text-slate-700 dark:text-slate-300">Medium</p>
+                                <p class="text-[10px] text-slate-400">Beagle, Pug, Lab</p>
+                            </div>
+                            <div class="size-card p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 text-center"
+                                onclick="selectSize(this, 'large')">
+                                <div class="text-2xl mb-1">🐕‍🦺</div>
+                                <p class="text-xs font-bold text-slate-700 dark:text-slate-300">Large</p>
+                                <p class="text-[10px] text-slate-400">GSD, Husky, Saint B.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Oxygen Requirement -->
+                    <div
+                        class="flex items-center justify-between bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-blue-600" style="font-size:20px;">air</span>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-800 dark:text-slate-200">Oxygen Support</p>
+                                <p class="text-[11px] text-slate-400">Portable O₂ cylinder on-board</p>
+                            </div>
+                        </div>
+                        <label class="oxygen-toggle">
+                            <input type="checkbox" id="oxygen-toggle">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Emergency Note -->
+                    <div class="space-y-2">
+                        <label
+                            class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                            <span class="material-symbols-outlined" style="font-size:16px;">edit_note</span>
+                            Emergency Note <span
+                                class="text-[10px] font-normal normal-case text-slate-400">(optional)</span>
+                        </label>
+                        <textarea id="emergency-note" rows="2"
+                            class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm transition-all resize-none"
+                            placeholder="e.g., Dog has difficulty breathing, bleeding from leg..."></textarea>
+                    </div>
+
+                    <!-- Book Button -->
+                    <button onclick="bookAmbulance()"
+                        class="w-full bg-primary hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-lg">
+                        <span class="material-symbols-outlined">emergency</span>
+                        Book Ambulance Now
+                    </button>
+
+                    <div class="flex items-center justify-center gap-6 pt-1">
+                        <div class="flex items-center gap-1.5 text-[11px] text-slate-400">
+                            <span class="material-symbols-outlined" style="font-size:14px;">verified_user</span>
+                            Certified Medics
+                        </div>
+                        <div class="flex items-center gap-1.5 text-[11px] text-slate-400">
+                            <span class="material-symbols-outlined" style="font-size:14px;">speed</span> 8-12 Min ETA
+                        </div>
+                        <div class="flex items-center gap-1.5 text-[11px] text-slate-400">
+                            <span class="material-symbols-outlined" style="font-size:14px;">medical_services</span> ICU
+                            Equipped
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Nearby Hospitals (Optional Selection) -->
+            <div
+                class="bg-panel-light dark:bg-panel-dark p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary"
+                            style="font-size:20px;">local_hospital</span>
+                        Nearby Hospitals
+                    </h3>
+                    <span
+                        class="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">Optional</span>
+                </div>
+                <p class="text-xs text-slate-400 mb-4">Select a hospital to set as your drop location</p>
+                <div class="space-y-3" id="hospital-list">
+                    <div class="hospital-card flex gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800"
+                        onclick="selectHospital(this, 'Riverfront Vet Hospital', 28.6139, 77.2090)">
+                        <div
+                            class="w-12 h-12 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-green-600"
+                                style="font-size:22px;">local_hospital</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">Riverfront Vet Hospital</h4>
+                            <p class="text-xs text-slate-500">0.8 km away • Open 24/7</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span
+                                    class="text-[10px] font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded">Available</span>
+                                <span class="text-[10px] text-slate-400">ICU • O₂ • Surgery</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hospital-card flex gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800"
+                        onclick="selectHospital(this, 'Central Pet Emergency', 28.6353, 77.2250)">
+                        <div
+                            class="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-blue-600"
+                                style="font-size:22px;">emergency</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">Central Pet Emergency</h4>
+                            <p class="text-xs text-slate-500">2.4 km away • Open 24/7</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span
+                                    class="text-[10px] font-bold text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded">High
+                                    Volume</span>
+                                <span class="text-[10px] text-slate-400">Emergency • Trauma</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hospital-card flex gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800"
+                        onclick="selectHospital(this, 'Northside Animal Care', 28.6500, 77.2150)">
+                        <div
+                            class="w-12 h-12 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center flex-shrink-0">
+                            <span class="material-symbols-outlined text-purple-600"
+                                style="font-size:22px;">vaccines</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-slate-900 dark:text-white text-sm">Northside Animal Care</h4>
+                            <p class="text-xs text-slate-500">4.1 km away • Closes 11 PM</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span
+                                    class="text-[10px] font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded">Available</span>
+                                <span class="text-[10px] text-slate-400">General • Dental</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Map -->
+        <div
+            class="lg:col-span-7 relative h-[600px] lg:h-auto min-h-[600px] rounded-2xl overflow-hidden shadow-sm bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <div id="map"></div>
+            <!-- Emergency ETA badge -->
+            <div
+                class="absolute top-4 left-4 z-[1000] bg-white/95 dark:bg-slate-800/95 backdrop-blur px-4 py-3 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary" style="font-size:20px;">ambulance</span>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Nearest Ambulance</p>
+                    <p class="font-bold text-lg text-slate-900 dark:text-white">8 - 12 min</p>
+                </div>
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse ml-1"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="footer"
+        class="bg-[#0F1113] border-t border-gray-200/10 dark:border-gray-800 pt-32 pb-16 transition-colors duration-300 text-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="index.html"
+                        class="text-2xl font-extrabold tracking-tight text-white uppercase mb-6 block">PETGO</a>
+                    <p class="text-gray-400 leading-relaxed max-w-xs">Redefining urban pet mobility and care through
+                        luxury services and premium essentials.</p>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white mb-6">Services</h5>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li><a href="ride-booking-1.html" class="hover:text-white transition-colors">Ride Booking</a>
+                        </li>
+                        <li><a href="ambulance.html" class="hover:text-white transition-colors">Emergency Ambulance</a>
+                        </li>
+                        <li><a href="store.html" class="hover:text-white transition-colors">Pet Essentials</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white mb-6">Company</h5>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Our Team</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white mb-6">Emergency</h5>
+                    <p class="text-sm text-gray-400 mb-4">24/7 Helpline</p>
+                    <p class="text-2xl font-extrabold text-primary">1800-PET-SOS</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[12px] text-gray-400">© 2024 PETGO Urban Pet Ecosystem. All rights reserved.</p>
+                <div class="flex gap-8 text-[12px] text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let map, pickupMarker, destinationMarker, routeLine;
+        let pickupCoords = null, destCoords = null;
+        let debounceTimers = {};
+        let selectedAnimalSize = 'medium';
+
+        // ---- MAP ----
+        function createNumberedIcon(number, color) {
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="position:relative;width:30px;height:42px;">
+                    <svg viewBox="0 0 30 42" width="30" height="42" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 0C6.716 0 0 6.716 0 15c0 10.688 15 27 15 27s15-16.312 15-27C30 6.716 23.284 0 15 0z" fill="${color}" stroke="#b91c1c" stroke-width="1"/>
+                        <circle cx="15" cy="14" r="8" fill="white"/>
+                        <text x="15" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="${color}" font-family="Arial, sans-serif">${number}</text>
+                    </svg>
+                </div>`,
+                iconSize: [30, 42], iconAnchor: [15, 42]
+            });
+        }
+
+        function createHospitalIcon() {
+            return L.divIcon({
+                className: 'hospital-marker',
+                html: `<div style="width:34px;height:34px;background:#ef4444;border-radius:8px;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;">
+                    <span class="material-symbols-outlined" style="color:white;font-size:18px;">local_hospital</span>
+                </div>`,
+                iconSize: [34, 34], iconAnchor: [17, 17]
+            });
+        }
+
+        function initMap() {
+            map = L.map('map', { zoomControl: true, attributionControl: false }).setView([20.5937, 78.9629], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+            // Add hospital markers
+            const hospitals = [
+                { name: 'Riverfront Vet Hospital', lat: 28.6139, lon: 77.2090 },
+                { name: 'Central Pet Emergency', lat: 28.6353, lon: 77.2250 },
+                { name: 'Northside Animal Care', lat: 28.6500, lon: 77.2150 }
+            ];
+            hospitals.forEach(h => {
+                L.marker([h.lat, h.lon], { icon: createHospitalIcon() }).addTo(map).bindPopup(`<b>🏥 ${h.name}</b>`);
+            });
+        }
+
+        async function fetchRoute(lat1, lon1, lat2, lon2) {
+            try {
+                const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                if (data.routes && data.routes.length > 0) {
+                    return data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                }
+            } catch (e) { console.error('Route error:', e); }
+            return [[lat1, lon1], [lat2, lon2]];
+        }
+
+        async function drawRoute() {
+            // Remove old route lines
+            map.eachLayer(l => { if (l instanceof L.Polyline) map.removeLayer(l); });
+            if (pickupMarker && destinationMarker) {
+                const p1 = pickupMarker.getLatLng();
+                const p2 = destinationMarker.getLatLng();
+                const coords = await fetchRoute(p1.lat, p1.lng, p2.lat, p2.lng);
+                L.polyline(coords, { color: '#A34343', weight: 8, opacity: 0.3, lineJoin: 'round', lineCap: 'round' }).addTo(map);
+                L.polyline(coords, { color: '#A34343', weight: 5, opacity: 0.9, lineJoin: 'round', lineCap: 'round' }).addTo(map);
+            }
+        }
+
+        // ---- SEARCH ----
+        async function searchLocations(query) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=in&limit=8&addressdetails=1`;
+            try {
+                const resp = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+                const data = await resp.json();
+                return data.map(item => ({
+                    name: item.display_name, lat: parseFloat(item.lat), lon: parseFloat(item.lon),
+                    type: item.type, category: item.class
+                }));
+            } catch (e) { console.error('Search error:', e); return []; }
+        }
+
+        function getLocationIcon(category, type) {
+            if (category === 'amenity' || type === 'hospital' || type === 'clinic') return 'local_hospital';
+            if (type === 'station' || type === 'halt') return 'train';
+            if (type === 'aerodrome') return 'flight';
+            if (category === 'shop') return 'storefront';
+            if (type === 'hotel' || type === 'guest_house') return 'hotel';
+            if (type === 'park' || type === 'garden') return 'park';
+            return 'location_on';
+        }
+
+        function setupLocationSearch(inputId, suggestionsId, type) {
+            const input = document.getElementById(inputId);
+            const suggestions = document.getElementById(suggestionsId);
+
+            input.addEventListener('input', (e) => {
+                const value = e.target.value.trim();
+                if (value.length < 2) { suggestions.classList.add('hidden'); return; }
+
+                suggestions.innerHTML = `<div class="suggestion-item text-sm" style="justify-content:center;cursor:default;">
+                    <span class="material-symbols-outlined text-slate-400 animate-spin" style="font-size:16px;">progress_activity</span>
+                    <span class="text-slate-400">Searching...</span></div>`;
+                suggestions.classList.remove('hidden');
+
+                clearTimeout(debounceTimers[inputId]);
+                debounceTimers[inputId] = setTimeout(async () => {
+                    const results = await searchLocations(value);
+                    if (results.length > 0) {
+                        suggestions.innerHTML = results.map(loc => {
+                            const parts = loc.name.split(', ');
+                            const mainName = parts.slice(0, 2).join(', ');
+                            const subText = parts.slice(2, 4).join(', ');
+                            const icon = getLocationIcon(loc.category, loc.type);
+                            return `<div class="suggestion-item" onclick="selectLocation('${inputId}','${suggestionsId}',this,${loc.lat},${loc.lon},'${type}')">
+                                <span class="material-symbols-outlined text-slate-400" style="font-size:16px;">${icon}</span>
+                                <div style="overflow:hidden;">
+                                    <div class="text-sm font-semibold text-slate-800 dark:text-slate-200" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${mainName}</div>
+                                    <div style="font-size:11px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${subText}</div>
+                                </div></div>`;
+                        }).join('');
+                    } else {
+                        suggestions.innerHTML = `<div class="suggestion-item text-sm" style="justify-content:center;cursor:default;">
+                            <span class="material-symbols-outlined text-slate-400" style="font-size:16px;">search_off</span>
+                            <span class="text-slate-400">No locations found</span></div>`;
+                    }
+                    suggestions.classList.remove('hidden');
+                }, 300);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !suggestions.contains(e.target)) suggestions.classList.add('hidden');
+            });
+        }
+
+        function selectLocation(inputId, suggestionsId, el, lat, lon, type) {
+            const name = el.querySelector('.font-semibold').textContent;
+            document.getElementById(inputId).value = name;
+            document.getElementById(suggestionsId).classList.add('hidden');
+
+            if (type === 'pickup') {
+                pickupCoords = { lat, lon, name };
+                if (pickupMarker) map.removeLayer(pickupMarker);
+                pickupMarker = L.marker([lat, lon], { icon: createNumberedIcon('1', '#22c55e') }).addTo(map).bindPopup('<b>🟢 Pickup:</b> ' + name);
+            } else {
+                destCoords = { lat, lon, name };
+                if (destinationMarker) map.removeLayer(destinationMarker);
+                destinationMarker = L.marker([lat, lon], { icon: createNumberedIcon('2', '#A34343') }).addTo(map).bindPopup('<b>🏥 Drop:</b> ' + name);
+            }
+
+            if (pickupMarker && destinationMarker) {
+                const group = new L.featureGroup([pickupMarker, destinationMarker]);
+                map.fitBounds(group.getBounds().pad(0.3));
+            } else {
+                map.setView([lat, lon], 14);
+            }
+            drawRoute();
+        }
+
+        // ---- HOSPITAL SELECT ----
+        function selectHospital(el, name, lat, lon) {
+            document.querySelectorAll('.hospital-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('destination-input').value = name;
+            destCoords = { lat, lon, name };
+
+            if (destinationMarker) map.removeLayer(destinationMarker);
+            destinationMarker = L.marker([lat, lon], { icon: createNumberedIcon('2', '#A34343') }).addTo(map).bindPopup('<b>🏥 ' + name + '</b>');
+
+            if (pickupMarker && destinationMarker) {
+                const group = new L.featureGroup([pickupMarker, destinationMarker]);
+                map.fitBounds(group.getBounds().pad(0.3));
+            } else {
+                map.setView([lat, lon], 14);
+            }
+            drawRoute();
+        }
+
+        // ---- ANIMAL SIZE ----
+        function selectSize(el, size) {
+            document.querySelectorAll('.size-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            selectedAnimalSize = size;
+        }
+
+        async function bookAmbulance() {
+            const pickup = document.getElementById('pickup-input').value.trim();
+            const destination = document.getElementById('destination-input').value.trim();
+            if (!pickup) { alert('Please enter a pickup location.'); return; }
+            if (!pickupCoords) { alert('Please select a pickup location from the suggestions.'); return; }
+
+            const oxygen = document.getElementById('oxygen-toggle').checked;
+            const emergencyNote = document.getElementById('emergency-note').value.trim();
+
+            // Send to backend API
+            try {
+                const response = await fetch('/api/ambulance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pickup,
+                        pickupLat: pickupCoords.lat,
+                        pickupLon: pickupCoords.lon,
+                        destination: destination || null,
+                        destLat: destCoords ? destCoords.lat : null,
+                        destLon: destCoords ? destCoords.lon : null,
+                        animalSize: selectedAnimalSize,
+                        oxygenSupport: oxygen,
+                        emergencyNote: emergencyNote || null
+                    })
+                });
+                const data = await response.json();
+                console.log('🚑 Ambulance booked:', data);
+            } catch (err) {
+                console.error('Ambulance booking error:', err);
+            }
+
+            // Build URL params and redirect to tracking page
+            const urlParams = new URLSearchParams({
+                pickup: pickup,
+                plat: pickupCoords.lat,
+                plon: pickupCoords.lon,
+                size: selectedAnimalSize,
+                oxygen: oxygen
+            });
+
+            if (destination && destCoords) {
+                urlParams.set('destination', destination);
+                urlParams.set('dlat', destCoords.lat);
+                urlParams.set('dlon', destCoords.lon);
+            }
+
+            window.location.href = 'ambulance-tracking.html?' + urlParams.toString();
+        }
+
+        // ---- INIT ----
+        window.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            setupLocationSearch('pickup-input', 'pickup-suggestions', 'pickup');
+            setupLocationSearch('destination-input', 'destination-suggestions', 'destination');
+        });
+    </script>
+</body>
+
+</html>

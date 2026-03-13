@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PETGO - Ride Tracking</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#E05D5D",
+                        "background-light": "#F9FAFB",
+                        "background-dark": "#111827",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#1F2937",
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(248, 247, 244, 0.7);
+        }
+
+        .dark .glass-nav {
+            background: rgba(15, 17, 19, 0.7);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .leaflet-container {
+            background: transparent !important;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.9);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        @keyframes car-bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 1.5s ease-out infinite;
+        }
+
+        .car-bounce {
+            animation: car-bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-down {
+            animation: slideDown 0.4s ease forwards;
+        }
+
+        .otp-digit {
+            width: 48px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            background: #f1f5f9;
+            border-radius: 12px;
+            color: #1e293b;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between font-sans">
+            <div class="flex items-center gap-2">
+                <a href="index.html"
+                    class="text-2xl font-extrabold tracking-tight text-[#1A1C1E] dark:text-white uppercase transition-colors"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">PETGO</a>
+            </div>
+            <div class="hidden md:flex items-center space-x-8" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="index.html">Home</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="services.html">Services</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="about.html">About Us</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="contact.html">Contact Us</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
+                    onclick="document.documentElement.classList.toggle('dark')">
+                    <span class="material-icons-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span class="material-icons-outlined text-2xl hidden dark:inline">light_mode</span>
+                </button>
+                <a href="#"
+                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors">Sign
+                    In / Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 pt-28 pb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-screen">
+        <!-- Left Panel -->
+        <div class="lg:col-span-4 space-y-6">
+            <!-- PHASE 1: Searching for Driver -->
+            <div id="searching-phase"
+                class="bg-card-light dark:bg-card-dark p-8 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
+                <div class="text-center py-8">
+                    <!-- Animated car icon -->
+                    <div class="relative w-24 h-24 mx-auto mb-6">
+                        <div class="absolute inset-0 rounded-full bg-primary/10 pulse-ring"></div>
+                        <div class="absolute inset-0 rounded-full bg-primary/5 pulse-ring"
+                            style="animation-delay: 0.5s;"></div>
+                        <div class="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
+                            <span class="material-icons-outlined text-primary text-4xl car-bounce">local_taxi</span>
+                        </div>
+                    </div>
+                    <h2 class="text-xl font-bold mb-2">Finding your driver...</h2>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Hang tight! We're matching you with the
+                        best nearby driver for your pet.</p>
+
+                    <!-- Progress dots -->
+                    <div class="flex items-center justify-center gap-2 mb-6">
+                        <div class="w-2 h-2 rounded-full bg-primary animate-bounce" style="animation-delay: 0s;"></div>
+                        <div class="w-2 h-2 rounded-full bg-primary animate-bounce" style="animation-delay: 0.2s;">
+                        </div>
+                        <div class="w-2 h-2 rounded-full bg-primary animate-bounce" style="animation-delay: 0.4s;">
+                        </div>
+                    </div>
+
+                    <!-- Trip summary -->
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-lg p-4 text-left">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-3 h-3 rounded-full bg-green-500 flex-shrink-0"></div>
+                            <span id="display-pickup"
+                                class="text-sm text-slate-700 dark:text-slate-300 truncate">Loading...</span>
+                        </div>
+                        <div class="border-l-2 border-dashed border-slate-300 dark:border-slate-600 h-4 ml-1.5"></div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-3 h-3 rounded-full bg-red-500 flex-shrink-0"></div>
+                            <span id="display-destination"
+                                class="text-sm text-slate-700 dark:text-slate-300 truncate">Loading...</span>
+                        </div>
+                    </div>
+
+                    <button onclick="window.location.href='ride-booking-1.html'"
+                        class="mt-6 text-sm text-slate-500 hover:text-red-500 transition-colors flex items-center gap-1 mx-auto">
+                        <span class="material-icons-outlined text-base">close</span> Cancel Ride
+                    </button>
+                </div>
+            </div>
+
+            <!-- PHASE 2: Driver Found (hidden initially) -->
+            <div id="driver-phase" class="hidden">
+                <!-- Driver accepted banner -->
+                <div
+                    class="bg-green-500 text-white px-5 py-3 rounded-xl mb-4 flex items-center gap-3 slide-down shadow-lg shadow-green-500/20">
+                    <span class="material-icons-outlined text-xl">check_circle</span>
+                    <div>
+                        <p class="font-bold text-sm">Driver Found!</p>
+                        <p class="text-xs text-green-100">Your driver is on the way</p>
+                    </div>
+                </div>
+
+                <!-- Driver card -->
+                <div
+                    class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 fade-in-up">
+                    <div class="flex items-center gap-4 mb-5">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop&crop=face"
+                                alt="Driver"
+                                class="w-16 h-16 rounded-full object-cover border-3 border-white shadow-lg">
+                            <div
+                                class="absolute -bottom-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-2 border-white flex items-center justify-center">
+                                <span class="material-icons-outlined text-white" style="font-size:12px;">check</span>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg">Rajesh Kumar</h3>
+                            <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-0.5">
+                                    <span class="material-icons-outlined text-yellow-500 text-base">star</span>
+                                    <span class="text-sm font-semibold">4.9</span>
+                                </div>
+                                <span class="text-slate-300">•</span>
+                                <span class="text-xs text-slate-500">1,200+ rides</span>
+                            </div>
+                        </div>
+                        <div id="eta-badge" class="bg-primary/10 px-3 py-1.5 rounded-full">
+                            <span class="text-primary font-bold text-sm">5 min</span>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle details -->
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 mb-5">
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-3">Vehicle Details</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="flex items-center gap-2">
+                                <span class="material-icons-outlined text-slate-400 text-lg">directions_car</span>
+                                <div>
+                                    <p class="text-xs text-slate-400">Car</p>
+                                    <p class="text-sm font-semibold">Maruti Ertiga</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-icons-outlined text-slate-400 text-lg">palette</span>
+                                <div>
+                                    <p class="text-xs text-slate-400">Color</p>
+                                    <p class="text-sm font-semibold">Pearl White</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-icons-outlined text-slate-400 text-lg">pin</span>
+                                <div>
+                                    <p class="text-xs text-slate-400">Plate No.</p>
+                                    <p class="text-sm font-bold tracking-wider">DL 4C AB 1234</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="material-icons-outlined text-slate-400 text-lg">pets</span>
+                                <div>
+                                    <p class="text-xs text-slate-400">Pet Ready</p>
+                                    <p class="text-sm font-semibold text-green-600">Verified ✓</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OTP Section -->
+                    <div
+                        class="bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-700 dark:to-slate-600 rounded-xl p-5 mb-5 text-white">
+                        <div class="flex items-center justify-between mb-3">
+                            <div>
+                                <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Ride OTP</p>
+                                <p class="text-[11px] text-slate-500">Share this with your driver</p>
+                            </div>
+                            <span class="material-icons-outlined text-slate-500 text-lg">lock</span>
+                        </div>
+                        <div class="flex items-center justify-center gap-3" id="otp-container">
+                            <div class="otp-digit">4</div>
+                            <div class="otp-digit">7</div>
+                            <div class="otp-digit">2</div>
+                            <div class="otp-digit">9</div>
+                        </div>
+                    </div>
+
+                    <!-- Trip route -->
+                    <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 mb-5">
+                        <div class="flex items-start gap-3 mb-3">
+                            <div class="flex flex-col items-center mt-1">
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                                <div class="w-0.5 h-8 bg-slate-300 dark:bg-slate-600"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                            </div>
+                            <div class="flex-1 space-y-4">
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Pickup</p>
+                                    <p id="route-pickup" class="text-sm font-semibold truncate">Loading...</p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Drop-off
+                                    </p>
+                                    <p id="route-destination" class="text-sm font-semibold truncate">Loading...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button
+                            class="flex items-center justify-center gap-2 py-3.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-sm font-semibold">
+                            <span class="material-icons-outlined text-lg">call</span> Call
+                        </button>
+                        <button
+                            class="flex items-center justify-center gap-2 py-3.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors text-sm font-semibold">
+                            <span class="material-icons-outlined text-lg">chat</span> Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Area -->
+        <div
+            class="lg:col-span-8 relative h-[600px] lg:h-auto min-h-[500px] rounded-xl overflow-hidden shadow-inner bg-slate-200 dark:bg-slate-800 border border-slate-200 dark:border-slate-800">
+            <div id="map"></div>
+            <!-- ETA overlay on map -->
+            <div id="map-eta-overlay"
+                class="hidden absolute top-4 left-4 z-[1000] bg-white dark:bg-slate-800 px-5 py-3 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
+                    <span class="material-icons-outlined text-green-500">navigation</span>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Driver arriving in</p>
+                    <p id="map-eta-text" class="font-bold text-lg">5 min</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let map, pickupMarker, destinationMarker, driverMarker, routeLine;
+        const params = new URLSearchParams(window.location.search);
+        const pickupName = params.get('pickup') || 'Connaught Place, New Delhi';
+        const destName = params.get('destination') || 'India Gate, New Delhi';
+        const pickupLat = parseFloat(params.get('plat')) || 28.6315;
+        const pickupLon = parseFloat(params.get('plon')) || 77.2167;
+        const destLat = parseFloat(params.get('dlat')) || 28.6129;
+        const destLon = parseFloat(params.get('dlon')) || 77.2295;
+
+        function createNumberedIcon(number, color) {
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="position:relative;width:30px;height:42px;">
+                    <svg viewBox="0 0 30 42" width="30" height="42" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 0C6.716 0 0 6.716 0 15c0 10.688 15 27 15 27s15-16.312 15-27C30 6.716 23.284 0 15 0z" fill="${color}" stroke="#b91c1c" stroke-width="1"/>
+                        <circle cx="15" cy="14" r="8" fill="white"/>
+                        <text x="15" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="${color}" font-family="Arial, sans-serif">${number}</text>
+                    </svg>
+                </div>`,
+                iconSize: [30, 42],
+                iconAnchor: [15, 42]
+            });
+        }
+
+        function createDriverIcon() {
+            return L.divIcon({
+                className: 'driver-marker',
+                html: `<div style="position:relative;">
+                    <div style="width:44px;height:44px;background:#1e293b;border-radius:50%;border:4px solid white;box-shadow:0 4px 15px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;">
+                        <span class="material-icons-outlined" style="color:#22c55e;font-size:22px;">directions_car</span>
+                    </div>
+                    <div style="position:absolute;top:-8px;right:-8px;background:#22c55e;width:18px;height:18px;border-radius:50%;border:2px solid white;display:flex;align-items:center;justify-content:center;">
+                        <span class="material-icons-outlined" style="color:white;font-size:10px;">navigation</span>
+                    </div>
+                </div>`,
+                iconSize: [44, 44],
+                iconAnchor: [22, 22]
+            });
+        }
+
+        // Populate location info
+        document.getElementById('display-pickup').textContent = pickupName;
+        document.getElementById('display-destination').textContent = destName;
+
+        function initMap() {
+            map = L.map('map', { zoomControl: true, attributionControl: false }).setView([pickupLat, pickupLon], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+
+            // Place pickup and destination markers
+            pickupMarker = L.marker([pickupLat, pickupLon], { icon: createNumberedIcon('1', '#EA4335') }).addTo(map).bindPopup('<b>Pickup:</b> ' + pickupName);
+            destinationMarker = L.marker([destLat, destLon], { icon: createNumberedIcon('2', '#EA4335') }).addTo(map).bindPopup('<b>Drop-off:</b> ' + destName);
+
+            // Fit both markers
+            const group = new L.featureGroup([pickupMarker, destinationMarker]);
+            map.fitBounds(group.getBounds().pad(0.3));
+
+            // Draw route
+            fetchRoute(pickupLat, pickupLon, destLat, destLon);
+        }
+
+        async function fetchRoute(lat1, lon1, lat2, lon2) {
+            try {
+                const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
+                const resp = await fetch(url);
+                const data = await resp.json();
+                if (data.routes && data.routes.length > 0) {
+                    const coords = data.routes[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                    L.polyline(coords, { color: '#4285F4', weight: 8, opacity: 0.4, lineJoin: 'round', lineCap: 'round' }).addTo(map);
+                    routeLine = L.polyline(coords, { color: '#4285F4', weight: 5, opacity: 0.9, lineJoin: 'round', lineCap: 'round' }).addTo(map);
+                }
+            } catch (e) {
+                console.error('Route error:', e);
+                L.polyline([[lat1, lon1], [lat2, lon2]], { color: '#4285F4', weight: 5, opacity: 0.9 }).addTo(map);
+            }
+        }
+
+        // Simulate driver approaching after acceptance
+        function simulateDriverApproach() {
+            // Driver starts slightly away from pickup
+            const offsetLat = pickupLat + (Math.random() > 0.5 ? 0.015 : -0.015);
+            const offsetLon = pickupLon + (Math.random() > 0.5 ? 0.015 : -0.015);
+            driverMarker = L.marker([offsetLat, offsetLon], { icon: createDriverIcon() }).addTo(map);
+
+            // Smoothly move driver toward pickup
+            let step = 0;
+            const totalSteps = 60;
+            const latDiff = (pickupLat - offsetLat) / totalSteps;
+            const lonDiff = (pickupLon - offsetLon) / totalSteps;
+
+            const interval = setInterval(() => {
+                step++;
+                const newLat = offsetLat + latDiff * step;
+                const newLon = offsetLon + lonDiff * step;
+                driverMarker.setLatLng([newLat, newLon]);
+
+                // Update ETA
+                const etaMin = Math.max(1, Math.round((totalSteps - step) / 12));
+                document.getElementById('eta-badge').innerHTML = `<span class="text-primary font-bold text-sm">${etaMin} min</span>`;
+                document.getElementById('map-eta-text').textContent = etaMin + ' min';
+
+                if (step >= totalSteps) {
+                    clearInterval(interval);
+                    document.getElementById('eta-badge').innerHTML = `<span class="text-green-600 font-bold text-sm">Arrived!</span>`;
+                    document.getElementById('map-eta-text').textContent = 'Arrived!';
+                }
+            }, 500);
+        }
+
+        // Phase transition: Searching → Driver Found
+        function showDriverFound() {
+            document.getElementById('searching-phase').classList.add('hidden');
+            document.getElementById('driver-phase').classList.remove('hidden');
+            document.getElementById('map-eta-overlay').classList.remove('hidden');
+
+            // Populate route info
+            document.getElementById('route-pickup').textContent = pickupName;
+            document.getElementById('route-destination').textContent = destName;
+
+            // Generate random OTP
+            const otp = Math.floor(1000 + Math.random() * 9000).toString();
+            const digits = document.querySelectorAll('.otp-digit');
+            digits.forEach((d, i) => { d.textContent = otp[i]; });
+
+            // Start driver approach animation
+            simulateDriverApproach();
+        }
+
+        // Initialize
+        window.onload = () => {
+            initMap();
+            // Simulate driver acceptance after 5 seconds
+            setTimeout(showDriverFound, 5000);
+        };
+    </script>
+</body>
+
+</html>

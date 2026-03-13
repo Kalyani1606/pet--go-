@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>PETGO - Refined Pet Ride Booking</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <style type="text/tailwindcss">
+        :root {
+            --primary-luxury: #2D2D2D;--accent-soft: #D4C9BD;--bg-beige: #F7F5F2;--card-white: #FFFFFF;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-beige);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .soft-shadow {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04);
+        }
+        .luxury-pill {
+            border-radius: 9999px;
+        }
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(248, 247, 244, 0.7);
+        }
+
+        .dark .glass-nav {
+            background: rgba(15, 17, 19, 0.7);
+        }
+
+        /* Location dropdown styles */
+        .location-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.08);
+            z-index: 100;
+            max-height: 220px;
+            overflow-y: auto;
+            border: 1px solid #E8E2DA;
+            margin-top: 4px;
+            animation: dropdownSlide 0.2s ease-out;
+        }
+
+        @keyframes dropdownSlide {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestion-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: background 0.15s ease;
+            border-bottom: 1px solid #F7F5F2;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background: #FAF9F7;
+        }
+
+        .suggestion-item:first-child {
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .suggestion-item:last-child {
+            border-radius: 0 0 1rem 1rem;
+        }
+
+        .suggestion-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 0.5rem;
+            background: #F7F5F2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .location-suggestions::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .location-suggestions::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .location-suggestions::-webkit-scrollbar-thumb {
+            background: #D4C9BD;
+            border-radius: 4px;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#2D2D2D",
+                        beige: {
+                            50: "#FAF9F7",
+                            100: "#F7F5F2",
+                            200: "#E8E2DA",
+                            300: "#D4C9BD",
+                        }
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                    },
+                    borderRadius: {
+                        "2xl": "1.5rem",
+                        "3xl": "2rem",
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+
+<body class="text-slate-800 transition-colors duration-300">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between font-sans">
+            <div class="flex items-center gap-2">
+                <a href="index.html"
+                    class="text-2xl font-extrabold tracking-tight text-[#1A1C1E] dark:text-white uppercase transition-colors"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">PETGO</a>
+            </div>
+            <div class="hidden md:flex items-center space-x-8" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="index.html">Home</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="services.html">Services</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="about.html">About Us</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="contact.html">Contact Us</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors hidden sm:block text-[#1A1C1E] dark:text-gray-100">
+                    <span class="material-icons-outlined material-symbols-outlined text-2xl">search</span>
+                </button>
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
+                    onclick="document.documentElement.classList.toggle('dark')">
+                    <span
+                        class="material-icons-outlined material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span
+                        class="material-icons-outlined material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                </button>
+                <a href="#"
+                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+            </div>
+        </div>
+    </nav>
+    <main class="max-w-7xl mx-auto px-8 pt-32 pb-16 grid grid-cols-1 lg:grid-cols-12 gap-10">
+        <div class="lg:col-span-4 space-y-8">
+            <div class="bg-white p-8 rounded-3xl soft-shadow border border-white/60">
+                <header class="mb-8">
+                    <h1 class="text-2xl font-semibold tracking-tight text-slate-900 mb-1">
+                        Book a Pet Ride
+                    </h1>
+                    <p class="text-sm text-slate-400">Premium door-to-door service</p>
+                </header>
+                <form class="space-y-6">
+                    <div class="space-y-2">
+                        <label
+                            class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-beige-300"></span>
+                            Pickup Location
+                        </label>
+                        <div class="relative location-container">
+                            <input id="pickup-input"
+                                class="w-full pl-11 pr-4 py-4 bg-beige-50 border border-beige-200 rounded-2xl focus:ring-1 focus:ring-beige-300 focus:border-beige-300 text-sm transition-all placeholder:text-slate-300"
+                                placeholder="Enter pickup address" type="text" autocomplete="off" />
+                            <span
+                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">location_on</span>
+                            <div id="pickup-suggestions" class="location-suggestions hidden"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                            Destination
+                        </label>
+                        <div class="relative location-container">
+                            <input id="destination-input"
+                                class="w-full pl-11 pr-4 py-4 bg-beige-50 border border-beige-200 rounded-2xl focus:ring-1 focus:ring-beige-300 focus:border-beige-300 text-sm transition-all placeholder:text-slate-300"
+                                placeholder="Where to?" type="text" autocomplete="off" />
+                            <span
+                                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+                            <div id="destination-suggestions" class="location-suggestions hidden"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label
+                            class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-xs">pets</span>
+                            Pet Details
+                        </label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <select
+                                class="w-full bg-beige-50 border border-beige-200 rounded-2xl focus:ring-1 focus:ring-beige-300 text-sm py-4 transition-all appearance-none">
+                                <option>Dog (Large)</option>
+                                <option>Dog (Small)</option>
+                                <option>Cat</option>
+                                <option>Other</option>
+                            </select>
+                            <input
+                                class="w-full bg-beige-50 border border-beige-200 rounded-2xl focus:ring-1 focus:ring-beige-300 text-sm py-4 transition-all"
+                                min="1" placeholder="Count" type="number" value="1" />
+                        </div>
+                    </div>
+                    <div class="pt-2 space-y-4">
+                        <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Select
+                            Service</label>
+                        <div id="service-options" class="space-y-3">
+                            <div onclick="selectService(this)"
+                                class="service-card flex items-center justify-between p-4 rounded-2xl border-2 border-beige-300 bg-beige-50/50 cursor-pointer ring-1 ring-beige-300 transition-all">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-2.5 bg-white rounded-xl soft-shadow">
+                                        <span
+                                            class="material-symbols-outlined text-primary text-[20px]">directions_car</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">Premium Comfort</p>
+                                        <p class="text-[11px] text-slate-500">Luxury SUV for larger pets</p>
+                                    </div>
+                                </div>
+                                <span class="font-bold text-sm text-slate-800">₹2,050</span>
+                            </div>
+                            <div onclick="selectService(this)"
+                                class="service-card flex items-center justify-between p-4 rounded-2xl border border-beige-200 bg-white hover:bg-beige-50 transition-all cursor-pointer">
+                                <div class="flex items-center gap-4">
+                                    <div class="p-2.5 bg-beige-100 rounded-xl">
+                                        <span
+                                            class="material-symbols-outlined text-slate-400 text-[20px]">electric_car</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-slate-800">Standard PetGo</p>
+                                        <p class="text-[11px] text-slate-500">Electric sedan, eco-friendly</p>
+                                    </div>
+                                </div>
+                                <span class="font-bold text-sm text-slate-400">₹1,530</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        class="w-full bg-primary hover:bg-black text-white luxury-pill font-semibold py-4.5 text-[15px] shadow-xl shadow-primary/20 transition-all active:scale-[0.98] mt-6 flex items-center justify-center gap-2"
+                        type="button" onclick="bookRide()">
+                        Confirm Ride
+                    </button>
+                </form>
+            </div>
+            <div class="bg-primary rounded-3xl p-8 text-white relative overflow-hidden group soft-shadow">
+                <div class="relative z-10">
+                    <span
+                        class="bg-white/10 text-beige-100 text-[10px] uppercase tracking-[0.2em] font-bold px-3 py-1.5 rounded-full mb-4 inline-block">Exclusive</span>
+                    <h3 class="text-xl font-medium tracking-tight mb-2">Weekend Retreat</h3>
+                    <p class="text-beige-300/80 text-sm leading-relaxed mb-6 max-w-[200px]">20% off all luxury rides to
+                        pet resorts through Sunday.</p>
+                    <button
+                        class="text-sm font-semibold flex items-center gap-2 hover:gap-3 transition-all border-b border-white/20 pb-1">
+                        Book Now <span class="material-symbols-outlined text-base">arrow_forward</span>
+                    </button>
+                </div>
+                <div
+                    class="absolute -right-12 -bottom-12 opacity-5 transform group-hover:scale-110 transition-transform duration-700">
+                    <span class="material-symbols-outlined text-[200px]">workspace_premium</span>
+                </div>
+            </div>
+        </div>
+        <div
+            class="lg:col-span-8 relative h-[600px] lg:h-auto min-h-[600px] rounded-[2.5rem] overflow-hidden soft-shadow bg-beige-100 border border-white">
+            <div id="map" style="height: 100%; width: 100%; z-index: 1;"></div>
+        </div>
+    </main>
+
+    <script>
+        let map, pickupMarker, destinationMarker, routeLine;
+        let debounceTimers = {};
+
+        function createNumberedIcon(number, color) {
+            return L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="position:relative;width:30px;height:42px;">
+                    <svg viewBox="0 0 30 42" width="30" height="42" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 0C6.716 0 0 6.716 0 15c0 10.688 15 27 15 27s15-16.312 15-27C30 6.716 23.284 0 15 0z" fill="${color}" stroke="#b91c1c" stroke-width="1"/>
+                        <circle cx="15" cy="14" r="8" fill="white"/>
+                        <text x="15" y="18" text-anchor="middle" font-size="12" font-weight="bold" fill="${color}" font-family="Arial, sans-serif">${number}</text>
+                    </svg>
+                </div>`,
+                iconSize: [30, 42],
+                iconAnchor: [15, 42],
+                popupAnchor: [0, -42]
+            });
+        }
+
+        function initMap() {
+            map = L.map('map', {
+                zoomControl: true,
+                attributionControl: false
+            }).setView([20.5937, 78.9629], 5);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        // Fetch actual road route from OSRM
+        async function fetchRoute(lat1, lon1, lat2, lon2) {
+            try {
+                const url = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=full&geometries=geojson`;
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.routes && data.routes.length > 0) {
+                    return data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
+                }
+            } catch (error) {
+                console.error('Routing error:', error);
+            }
+            return [[lat1, lon1], [lat2, lon2]];
+        }
+
+        async function drawRoute() {
+            if (routeLine) map.removeLayer(routeLine);
+            if (pickupMarker && destinationMarker) {
+                const p1 = pickupMarker.getLatLng();
+                const p2 = destinationMarker.getLatLng();
+                const routeCoords = await fetchRoute(p1.lat, p1.lng, p2.lat, p2.lng);
+
+                L.polyline(routeCoords, {
+                    color: '#4285F4',
+                    weight: 8,
+                    opacity: 0.4,
+                    lineJoin: 'round',
+                    lineCap: 'round'
+                }).addTo(map);
+
+                routeLine = L.polyline(routeCoords, {
+                    color: '#4285F4',
+                    weight: 5,
+                    opacity: 0.9,
+                    lineJoin: 'round',
+                    lineCap: 'round'
+                }).addTo(map);
+            }
+        }
+
+        // Smart search using OpenStreetMap Nominatim API (restricted to India)
+        async function searchLocations(query) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=in&limit=8&addressdetails=1`;
+            try {
+                const response = await fetch(url, {
+                    headers: { 'Accept-Language': 'en' }
+                });
+                const data = await response.json();
+                return data.map(item => ({
+                    name: item.display_name,
+                    lat: parseFloat(item.lat),
+                    lon: parseFloat(item.lon),
+                    type: item.type,
+                    category: item.class
+                }));
+            } catch (error) {
+                console.error('Search error:', error);
+                return [];
+            }
+        }
+
+        function getLocationIcon(category, type) {
+            if (category === 'amenity' || type === 'hospital' || type === 'clinic') return 'local_hospital';
+            if (type === 'station' || type === 'halt') return 'train';
+            if (type === 'aerodrome') return 'flight';
+            if (category === 'shop') return 'storefront';
+            if (type === 'hotel' || type === 'guest_house') return 'hotel';
+            if (type === 'park' || type === 'garden') return 'park';
+            if (type === 'school' || type === 'university' || type === 'college') return 'school';
+            return 'location_on';
+        }
+
+        function setupLocationSearch(inputId, suggestionsId, type) {
+            const input = document.getElementById(inputId);
+            const suggestions = document.getElementById(suggestionsId);
+
+            input.addEventListener('input', (e) => {
+                const value = e.target.value.trim();
+                if (value.length < 2) {
+                    suggestions.classList.add('hidden');
+                    return;
+                }
+
+                suggestions.innerHTML = `
+                    <div class="suggestion-item" style="justify-content: center; cursor: default;">
+                        <span class="material-symbols-outlined text-slate-400 animate-spin" style="font-size: 16px;">progress_activity</span>
+                        <span class="text-sm text-slate-400">Searching addresses in India...</span>
+                    </div>`;
+                suggestions.classList.remove('hidden');
+
+                clearTimeout(debounceTimers[inputId]);
+                debounceTimers[inputId] = setTimeout(async () => {
+                    const results = await searchLocations(value);
+                    if (results.length > 0) {
+                        suggestions.innerHTML = results.map(loc => {
+                            const parts = loc.name.split(', ');
+                            const mainName = parts.slice(0, 2).join(', ');
+                            const subText = parts.slice(2, 4).join(', ');
+                            const icon = getLocationIcon(loc.category, loc.type);
+                            return `
+                                <div class="suggestion-item" onclick="selectLocation('${inputId}', '${suggestionsId}', this, ${loc.lat}, ${loc.lon}, '${type}')">
+                                    <div class="suggestion-icon">
+                                        <span class="material-symbols-outlined text-slate-400" style="font-size: 16px;">${icon}</span>
+                                    </div>
+                                    <div style="overflow:hidden;">
+                                        <div class="text-sm font-semibold text-slate-800" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${mainName}</div>
+                                        <div style="font-size: 11px; color: #94a3b8; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${subText}</div>
+                                    </div>
+                                </div>`;
+                        }).join('');
+                        suggestions.classList.remove('hidden');
+                    } else {
+                        suggestions.innerHTML = `
+                            <div class="suggestion-item" style="justify-content: center; cursor: default;">
+                                <span class="material-symbols-outlined text-slate-400" style="font-size: 16px;">search_off</span>
+                                <span class="text-sm text-slate-400">No locations found</span>
+                            </div>`;
+                        suggestions.classList.remove('hidden');
+                    }
+                }, 300);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !suggestions.contains(e.target)) {
+                    suggestions.classList.add('hidden');
+                }
+            });
+        }
+
+        function selectLocation(inputId, suggestionsId, el, lat, lon, type) {
+            const name = el.querySelector('.font-semibold').textContent;
+            document.getElementById(inputId).value = name;
+            document.getElementById(suggestionsId).classList.add('hidden');
+
+            if (type === 'pickup') {
+                if (pickupMarker) map.removeLayer(pickupMarker);
+                pickupMarker = L.marker([lat, lon], {
+                    icon: createNumberedIcon('1', '#EA4335')
+                }).addTo(map).bindPopup('<b>Pickup:</b> ' + name);
+            } else {
+                if (destinationMarker) map.removeLayer(destinationMarker);
+                destinationMarker = L.marker([lat, lon], {
+                    icon: createNumberedIcon('2', '#EA4335')
+                }).addTo(map).bindPopup('<b>Drop-off:</b> ' + name);
+            }
+
+            if (pickupMarker && destinationMarker) {
+                const group = new L.featureGroup([pickupMarker, destinationMarker]);
+                map.fitBounds(group.getBounds().pad(0.3));
+            } else {
+                map.setView([lat, lon], 14);
+            }
+
+            drawRoute();
+        }
+
+        // Service card toggle
+        function selectService(el) {
+            document.querySelectorAll('.service-card').forEach(card => {
+                card.classList.remove('border-2', 'border-beige-300', 'bg-beige-50/50', 'ring-1', 'ring-beige-300');
+                card.classList.add('border', 'border-beige-200', 'bg-white');
+            });
+            el.classList.remove('border', 'border-beige-200', 'bg-white');
+            el.classList.add('border-2', 'border-beige-300', 'bg-beige-50/50', 'ring-1', 'ring-beige-300');
+        }
+
+        // Book ride via backend API
+        async function bookRide() {
+            const pickup = document.getElementById('pickup-input').value.trim();
+            const destination = document.getElementById('destination-input').value.trim();
+            if (!pickup) { alert('Please enter a pickup location.'); return; }
+
+            const petSelect = document.querySelector('select');
+            const petCount = document.querySelector('input[type="number"]').value;
+            const selectedCard = document.querySelector('.service-card.border-2');
+            const service = selectedCard ? selectedCard.querySelector('.font-bold.text-sm').textContent.trim() : 'Premium Comfort';
+            const priceText = selectedCard ? selectedCard.querySelector('span.font-bold:last-child').textContent : '₹2,050';
+            const price = parseInt(priceText.replace(/[₹,]/g, '')) || 0;
+
+            try {
+                const response = await fetch('/api/rides', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pickup,
+                        pickupLat: pickupMarker ? pickupMarker.getLatLng().lat : null,
+                        pickupLon: pickupMarker ? pickupMarker.getLatLng().lng : null,
+                        destination,
+                        destLat: destinationMarker ? destinationMarker.getLatLng().lat : null,
+                        destLon: destinationMarker ? destinationMarker.getLatLng().lng : null,
+                        petType: petSelect.value,
+                        petCount: parseInt(petCount) || 1,
+                        service,
+                        price
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    alert('✅ Ride booked successfully!\nBooking ID: ' + data.bookingId);
+                } else {
+                    alert('❌ ' + (data.error || 'Failed to book ride'));
+                }
+            } catch (err) {
+                console.error('Booking error:', err);
+                alert('❌ Could not connect to server. Make sure backend is running.');
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            setupLocationSearch('pickup-input', 'pickup-suggestions', 'pickup');
+            setupLocationSearch('destination-input', 'destination-suggestions', 'destination');
+        });
+    </script>
+
+
+    <footer id="footer"
+        class="bg-background-dark dark:bg-background-dark border-t border-gray-200/10 dark:border-gray-800 pt-32 pb-16 transition-colors duration-300 text-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="index.html"
+                        class="text-2xl font-extrabold tracking-tight text-white dark:text-white uppercase mb-6 block">PETGO</a>
+                    <p class="text-gray-400 dark:text-gray-400 leading-relaxed max-w-xs">
+                        Redefining urban pet mobility and care through luxury services and premium essentials.
+                    </p>
+                    <div class="flex gap-4 mt-8">
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5c0-1.99 1.4-3 3.23-3 .88 0 1.77.15 1.77.15v2h-1c-1 0-1.31.62-1.31 1.25V12h2.25l-.36 3H13v6.8c4.56-.93 8-4.96 8-9.8z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.063 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.063-2.633-.333-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.778 6.98 6.978 1.28.058 1.688.072 4.948.072s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Services
+                    </h5>
+                    <ul class="space-y-4 text-sm text-gray-400 dark:text-gray-400">
+                        <li><a href="ride-booking-1.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Ride Booking</a></li>
+                        <li><a href="ambulance.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Emergency Ambulance</a>
+                        </li>
+                        <li><a href="store.html" class="hover:text-white dark:hover:text-white transition-colors">Pet
+                                Essentials</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Company</h5>
+                    <ul class="space-y-4 text-sm text-gray-400 dark:text-gray-400">
+                        <li><a href="about.html" class="hover:text-white dark:hover:text-white transition-colors">About
+                                Us</a></li>
+                        <li><a href="#" class="hover:text-white dark:hover:text-white transition-colors">Our Team</a>
+                        </li>
+                        <li><a href="#" class="hover:text-white dark:hover:text-white transition-colors">Impact</a></li>
+                        <li><a href="contact.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Newsletter
+                    </h5>
+                    <p class="text-sm text-gray-400 dark:text-gray-400 mb-6">Join our mailing list for news and
+                        exclusive offers.</p>
+                    <div class="relative group">
+                        <input type="email" placeholder="Email address"
+                            class="w-full bg-white/5 border border-white/12 rounded-full px-6 py-4 text-sm text-white placeholder:text-gray-500 focus:ring-2 focus:ring-accent/50 focus:border-accent focus:bg-white/10 transition-all outline-none">
+                        <button
+                            class="absolute right-1.5 top-1.5 bottom-1.5 px-6 bg-white text-primary rounded-full text-[10px] font-black hover:bg-accent hover:text-primary transition-all tracking-widest active:scale-95 shadow-lg shadow-black/20">JOIN</button>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="border-t border-gray-100 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[12px] text-gray-400">© 2024 PETGO Urban Pet Ecosystem. All rights reserved.</p>
+                <div class="flex gap-8 text-[12px] text-gray-400">
+                    <a href="#" class="hover:text-white dark:hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white dark:hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | PETGO - Urban Pet Ecosystem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1A1C1E;
+            --accent: #D4B996;
+            --bg-light: #F8F7F4;
+            --bg-dark: #0F1113;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding-top: 80px;
+        }
+
+        .glass-nav {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(248, 247, 244, 0.7);
+        }
+
+        .dark .glass-nav {
+            background: rgba(15, 17, 19, 0.7);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1A1C1E',
+                        accent: '#D4B996',
+                        'background-light': '#F8F7F4',
+                        'background-dark': '#0F1113',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-sans text-primary dark:text-gray-100 transition-colors duration-300">
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-gray-200/50 dark:border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between font-sans">
+            <div class="flex items-center gap-2">
+                <a href="index.html"
+                    class="text-2xl font-extrabold tracking-tight text-[#1A1C1E] dark:text-white uppercase transition-colors"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">PETGO</a>
+            </div>
+            <div class="hidden md:flex items-center space-x-8" style="font-family: 'Plus Jakarta Sans', sans-serif;">
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="index.html">Home</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="services.html">Services</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="about.html">About Us</a>
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                    href="contact.html">Contact Us</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors hidden sm:block text-[#1A1C1E] dark:text-gray-100">
+                    <span class="material-icons-outlined material-symbols-outlined text-2xl">search</span>
+                </button>
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
+                    onclick="document.documentElement.classList.toggle('dark')">
+                    <span
+                        class="material-icons-outlined material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span
+                        class="material-icons-outlined material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                </button>
+                <a href="#"
+                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
+                    style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-40 pb-24 px-6 relative min-h-screen flex items-center overflow-hidden">
+        <!-- Luxury Background with Ambient Glows -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1551730459-92db2a328d6a?auto=format&fit=crop&q=80&w=2070"
+                class="w-full h-full object-cover opacity-20 grayscale brightness-50" alt="Background">
+            <div
+                class="absolute inset-0 bg-gradient-to-tr from-background-light via-background-light/80 to-transparent dark:from-background-dark dark:via-background-dark/90 dark:to-transparent">
+            </div>
+            <!-- Ambient Glows -->
+            <div class="absolute top-1/4 -right-20 w-96 h-96 bg-accent/10 rounded-full blur-[120px] animate-pulse">
+            </div>
+            <div class="absolute bottom-1/4 -left-20 w-96 h-96 bg-accent/5 rounded-full blur-[120px] animate-pulse"
+                style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto relative z-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+                <!-- Left Content: Introduction & Info -->
+                <div class="lg:col-span-5 space-y-12">
+                    <div class="reveal">
+                        <span
+                            class="inline-block py-1 px-3 rounded-full bg-accent/20 text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Concierge
+                            Services</span>
+                        <h1 class="text-6xl font-extrabold mb-8 tracking-tighter leading-tight">Your Journey <br><span
+                                class="text-accent underline decoration-1 underline-offset-8">Starts Here</span></h1>
+                        <p class="text-gray-500 dark:text-gray-400 text-lg leading-relaxed max-w-md">Our global
+                            concierge team is dedicated to providing flawless mobility and care for your most precious
+                            companions. We respond to every request with the same urgency as a sudden emergency.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-6 reveal" style="transition-delay: 100ms;">
+                        <div
+                            class="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500">
+                            <div class="flex items-center gap-6">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
+                                    <span class="material-symbols-outlined text-3xl">phone_in_talk</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400 mb-1">Emergency
+                                        Hotline</h4>
+                                    <p class="text-xl font-bold">+1 (800) PET-HELP</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500">
+                            <div class="flex items-center gap-6">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
+                                    <span class="material-symbols-outlined text-3xl">alternate_email</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400 mb-1">Direct
+                                        Inquiry</h4>
+                                    <p class="text-xl font-bold">concierge@petgo.com</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            class="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500">
+                            <div class="flex items-center gap-6">
+                                <div
+                                    class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
+                                    <span class="material-symbols-outlined text-3xl">distance</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm uppercase tracking-widest text-gray-400 mb-1">Global HQ
+                                    </h4>
+                                    <p class="text-xl font-bold">772 Fifth Ave, Manhattan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Content: Premium Form -->
+                <div class="lg:col-span-7 reveal" style="transition-delay: 300ms;">
+                    <div class="relative group">
+                        <!-- Decorative Border Glow -->
+                        <div
+                            class="absolute -inset-0.5 bg-gradient-to-r from-accent/50 to-transparent rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000">
+                        </div>
+
+                        <div
+                            class="relative glass-card p-12 rounded-[2.5rem] border border-white/20 dark:border-gray-800 shadow-2xl overflow-hidden">
+                            <!-- Noise Texture Overlay -->
+                            <div
+                                class="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')]">
+                            </div>
+
+                            <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
+                                Send a Request
+                                <span class="w-1.5 h-1.5 rounded-full bg-accent animate-ping"></span>
+                            </h2>
+
+                            <form class="space-y-8">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div class="space-y-3">
+                                        <label
+                                            class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">First
+                                            Name</label>
+                                        <div class="relative">
+                                            <input type="text" placeholder="Gabriel"
+                                                class="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-white/5 focus:ring-1 focus:ring-accent outline-none transition-all placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:bg-white dark:focus:bg-white/10">
+                                            <span
+                                                class="absolute right-4 top-4 text-accent opacity-0 transition-opacity peer-valid:opacity-100">
+                                                <span class="material-symbols-outlined text-sm">check_circle</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-3">
+                                        <label
+                                            class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Last
+                                            Name</label>
+                                        <input type="text" placeholder="Leclair"
+                                            class="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-white/5 focus:ring-1 focus:ring-accent outline-none transition-all placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:bg-white dark:focus:bg-white/10">
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Email
+                                        Address</label>
+                                    <input type="email" placeholder="client@petgo.luxury"
+                                        class="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-white/5 focus:ring-1 focus:ring-accent outline-none transition-all placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:bg-white dark:focus:bg-white/10">
+                                </div>
+
+                                <div class="space-y-3">
+                                    <label
+                                        class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Request
+                                        Subject</label>
+                                    <div class="relative">
+                                        <select
+                                            class="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-white/5 focus:ring-1 focus:ring-accent outline-none transition-all appearance-none cursor-pointer focus:bg-white dark:focus:bg-white/10">
+                                            <option>General Concierge Inquiry</option>
+                                            <option>Private Jet/Road Booking</option>
+                                            <option>Emergency Medical Dispatch</option>
+                                            <option>Partnership Proposal</option>
+                                        </select>
+                                        <div class="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none">
+                                            <span class="material-symbols-outlined text-gray-400">expand_more</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">Your
+                                        Message</label>
+                                    <textarea rows="4"
+                                        placeholder="Describe how we can tailor our services for your companion..."
+                                        class="w-full px-6 py-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/40 dark:bg-white/5 focus:ring-1 focus:ring-accent outline-none transition-all placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:bg-white dark:focus:bg-white/10 resize-none"></textarea>
+                                </div>
+
+                                <button type="button" onclick="submitContact()"
+                                    class="group relative w-full py-6 bg-primary dark:bg-accent text-white dark:text-primary font-bold rounded-xl overflow-hidden transition-all hover:shadow-[0_20px_40px_rgba(212,185,150,0.3)] dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] active:scale-95">
+                                    <span class="relative z-10 flex items-center justify-center gap-3">
+                                        Submit Request
+                                        <span
+                                            class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward_ios</span>
+                                    </span>
+                                    <div
+                                        class="absolute inset-0 bg-white/20 dark:bg-black/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                                    </div>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section
+        class="py-24 px-6 bg-white/30 dark:bg-white/5 border-y border-gray-100 dark:border-gray-800 backdrop-blur-3xl">
+        <div class="max-w-3xl mx-auto">
+            <!-- FAQ Section -->
+            <div class="reveal text-center mb-16">
+                <span class="text-accent font-bold text-[10px] uppercase tracking-[0.2em] mb-4 block">Information
+                    Desk</span>
+                <h2 class="text-4xl font-bold tracking-tight">Frequently Asked <br><span
+                        class="italic text-gray-400 font-normal">Questions</span></h2>
+            </div>
+
+            <div class="reveal space-y-6">
+                <div class="group border-b border-gray-200 dark:border-gray-800 pb-4">
+                    <button
+                        class="w-full flex items-center justify-between py-6 text-left hover:text-accent transition-colors">
+                        <span class="font-bold text-lg">What are your concierge hours?</span>
+                        <span class="material-symbols-outlined group-hover:rotate-45 transition-transform">add</span>
+                    </button>
+                    <div class="max-h-0 overflow-hidden transition-all duration-500 group-focus-within:max-h-40">
+                        <p class="text-gray-500 dark:text-gray-400 py-4 leading-relaxed">
+                            Our elite concierge team operates 24/7, 365 days a year. We are always available to handle
+                            bookings, inquiries, and emergency dispatches regardless of your time zone.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="group border-b border-gray-200 dark:border-gray-800 pb-4">
+                    <button
+                        class="w-full flex items-center justify-between py-6 text-left hover:text-accent transition-colors">
+                        <span class="font-bold text-lg">Do you handle international pet relocation?</span>
+                        <span class="material-symbols-outlined group-hover:rotate-45 transition-transform">add</span>
+                    </button>
+                    <div class="max-h-0 overflow-hidden transition-all duration-500 group-focus-within:max-h-40">
+                        <p class="text-gray-500 dark:text-gray-400 py-4 leading-relaxed">
+                            Yes, we specialize in seamless international travel, managing all customs documentation,
+                            health certifications, and climate-controlled transport logistics.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="group border-b border-gray-200 dark:border-gray-800 pb-4">
+                    <button
+                        class="w-full flex items-center justify-between py-6 text-left hover:text-accent transition-colors">
+                        <span class="font-bold text-lg">How quickly can you dispatch an ambulance?</span>
+                        <span class="material-symbols-outlined group-hover:rotate-45 transition-transform">add</span>
+                    </button>
+                    <div class="max-h-0 overflow-hidden transition-all duration-500 group-focus-within:max-h-40">
+                        <p class="text-gray-500 dark:text-gray-400 py-4 leading-relaxed">
+                            In major metropolitan areas, our average response time is under 12 minutes. Our dispatch
+                            center uses real-time traffic monitoring to route the nearest unit to your location.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer
+        class="bg-background-dark dark:bg-background-dark border-t border-gray-200/10 dark:border-gray-800 pt-32 pb-16 transition-colors duration-300 text-white">
+        <!-- Footer Content (Same as standardized footer) -->
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-1 md:col-span-1">
+                    <a href="index.html"
+                        class="text-2xl font-extrabold tracking-tight text-white dark:text-white uppercase mb-6 block">PETGO</a>
+                    <p class="text-gray-400 dark:text-gray-400 leading-relaxed max-w-xs">
+                        Redefining urban pet mobility and care through luxury services and premium essentials.
+                    </p>
+                    <div class="flex gap-4 mt-8">
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5c0-1.99 1.4-3 3.23-3 .88 0 1.77.15 1.77.15v2h-1c-1 0-1.31.62-1.31 1.25V12h2.25l-.36 3H13v6.8c4.56-.93 8-4.96 8-9.8z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.332 3.608 1.308.975.975 1.245 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.063 1.366-.333 2.633-1.308 3.608-.975.975-2.242 1.245-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.063-2.633-.333-3.608-1.308-.975-.975-1.245-2.242-1.308-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.332-2.633 1.308-3.608.975-.975 2.242-1.245 3.608-1.308 1.266-.058 1.646-.07 4.85-.07zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.778 6.98 6.978 1.28.058 1.688.072 4.948.072s3.668-.014 4.948-.072c4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                            </svg>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:bg-accent hover:border-accent hover:text-primary transition-all duration-300 group">
+                            <svg class="w-5 h-5 fill-current transition-transform group-hover:scale-110"
+                                viewBox="0 0 24 24">
+                                <path
+                                    d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Services
+                    </h5>
+                    <ul class="space-y-4 text-sm text-gray-400 dark:text-gray-400">
+                        <li><a href="ride-booking-1.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Ride Booking</a></li>
+                        <li><a href="ambulance.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Emergency
+                                Ambulance</a></li>
+                        <li><a href="store.html" class="hover:text-white dark:hover:text-white transition-colors">Pet
+                                Essentials</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Company
+                    </h5>
+                    <ul class="space-y-4 text-sm text-gray-400 dark:text-gray-400">
+                        <li><a href="about.html" class="hover:text-white dark:hover:text-white transition-colors">About
+                                Us</a>
+                        </li>
+                        <li><a href="#" class="hover:text-white dark:hover:text-white transition-colors">Our Team</a>
+                        </li>
+                        <li><a href="#" class="hover:text-white dark:hover:text-white transition-colors">Impact</a>
+                        </li>
+                        <li><a href="contact.html"
+                                class="hover:text-white dark:hover:text-white transition-colors">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-sm uppercase tracking-widest text-white dark:text-white mb-6">Newsletter
+                    </h5>
+                    <p class="text-sm text-gray-400 dark:text-gray-400 mb-6">Join our mailing list for news and
+                        exclusive offers.</p>
+                    <div class="relative group">
+                        <input type="email" placeholder="Email address"
+                            class="w-full bg-white/5 border border-white/12 rounded-full px-6 py-4 text-sm text-white placeholder:text-gray-500 focus:ring-2 focus:ring-accent/50 focus:border-accent focus:bg-white/10 transition-all outline-none">
+                        <button
+                            class="absolute right-1.5 top-1.5 bottom-1.5 px-6 bg-white text-primary rounded-full text-[10px] font-black hover:bg-accent hover:text-primary transition-all tracking-widest active:scale-95 shadow-lg shadow-black/20">JOIN</button>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="border-t border-gray-100 dark:border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <p class="text-[12px] text-gray-400">© 2024 PETGO Urban Pet Ecosystem. All rights reserved.</p>
+                <div class="flex gap-8 text-[12px] text-gray-400">
+                    <a href="#" class="hover:text-white dark:hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white dark:hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Reveal on scroll logic
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Initial check
+        reveal();
+
+        // FAQ Accordion Logic
+        const faqButtons = document.querySelectorAll('.group button');
+        faqButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const group = button.closest('.group');
+                const p = group.querySelector('p');
+                const content = group.querySelector('.overflow-hidden');
+                const icon = button.querySelector('.material-symbols-outlined');
+
+                // Toggle current item
+                const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+                // Close all others
+                document.querySelectorAll('.group .overflow-hidden').forEach(otherContent => {
+                    otherContent.style.maxHeight = '0px';
+                    otherContent.closest('.group').querySelector('.material-symbols-outlined').style.transform = 'rotate(0deg)';
+                });
+
+                if (!isOpen) {
+                    content.style.maxHeight = p.scrollHeight + 32 + 'px'; // 32 for padding
+                    icon.style.transform = 'rotate(45deg)';
+                } else {
+                    content.style.maxHeight = '0px';
+                    icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+
+        // Form Focus Effects
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.closest('.space-y-3').querySelector('label').classList.add('text-accent');
+            });
+            input.addEventListener('blur', () => {
+                input.closest('.space-y-3').querySelector('label').classList.remove('text-accent');
+            });
+        });
+    </script>
+</body>
+
+</html>
