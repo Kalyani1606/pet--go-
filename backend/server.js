@@ -19,6 +19,7 @@ app.use('/api/ambulance', require('./routes/ambulance'));
 app.use('/api/contact', require('./routes/contact'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/newsletter', require('./routes/newsletter'));
+app.use('/api/auth', require('./routes/auth'));
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -31,7 +32,7 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log('╔═══════════════════════════════════════════╗');
   console.log('║      🐾 PETGO Backend Server Running      ║');

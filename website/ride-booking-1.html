@@ -2,6 +2,7 @@
 <html class="light" lang="en">
 
 <head>
+    <script src="theme.js"></script>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>PETGO - Pet Ride Booking &amp; Tracking</title>
@@ -101,6 +102,7 @@
             background: #374151;
         }
     </style>
+    <script src="notifications.js"></script>
 </head>
 
 <body
@@ -123,21 +125,18 @@
                     href="contact.html">Contact Us</a>
             </div>
             <div class="flex items-center space-x-4">
-                <button
-                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors hidden sm:block text-[#1A1C1E] dark:text-gray-100">
-                    <span class="material-icons-outlined material-symbols-outlined text-2xl">search</span>
-                </button>
+                
                 <button
                     class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
-                    onclick="document.documentElement.classList.toggle('dark')">
+                    onclick="window.toggleTheme()">
                     <span
                         class="material-icons-outlined material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
                     <span
                         class="material-icons-outlined material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
                 </button>
-                <a href="#"
-                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
-                    style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                <div id="auth-container">
+                    <a id="auth-btn" onclick="handleAuthClick(event)" href="#" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -488,28 +487,38 @@
             const serviceType = selectedServiceEl ? selectedServiceEl.querySelector('.font-bold').textContent : 'Premium Comfort';
 
             if (!pickup || !destination) {
-                alert('Please enter both pickup and destination locations.');
+                showNotification('Please enter both pickup and destination locations.', 'info');
                 return;
             }
             if (!pickupCoords || !destCoords) {
-                alert('Please select locations from the dropdown suggestions.');
+                showNotification('Please select locations from the dropdown suggestions.', 'info');
                 return;
             }
 
             try {
-                const response = await fetch('/api/rides', {
+                const host = window.location.hostname;
+                const port = window.location.port;
+                
+                let fetchUrl = '/api/rides';
+                if (port.startsWith('550')) {
+                    fetchUrl = `http://${host}:3000/api/rides`;
+                } else if (host === '127.0.0.1' || host === 'localhost') {
+                    fetchUrl = '/api/rides';
+                }
+
+                const response = await fetch(fetchUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        pickup_name: pickup,
-                        destination_name: destination,
-                        pickup_lat: pickupCoords.lat,
-                        pickup_lon: pickupCoords.lon,
-                        destination_lat: destCoords.lat,
-                        destination_lon: destCoords.lon,
-                        pet_details: petDetails,
-                        pet_count: petCount,
-                        service_type: serviceType
+                        pickup: pickup,
+                        destination: destination,
+                        pickupLat: pickupCoords.lat,
+                        pickupLon: pickupCoords.lon,
+                        destLat: destCoords.lat,
+                        destLon: destCoords.lon,
+                        petType: petDetails,
+                        petCount: petCount,
+                        service: serviceType
                     })
                 });
 
@@ -525,11 +534,11 @@
                     window.location.href = 'ride-tracking.html?' + params.toString();
                 } else {
                     const data = await response.json();
-                    alert(data.error || 'Failed to book ride');
+                    showNotification(data.error || 'Failed to book ride', 'error');
                 }
             } catch (error) {
                 console.error('Ride booking error:', error);
-                alert('Connection error');
+                showNotification('Connection error', 'error');
             }
         }
 
@@ -537,7 +546,7 @@
             const emailInput = document.getElementById('newsletter-email');
             const email = emailInput.value.trim();
             if (!email) {
-                alert('Please enter your email');
+                showNotification('Please enter your email', 'info');
                 return;
             }
 
@@ -550,14 +559,14 @@
 
                 const data = await response.json();
                 if (response.ok) {
-                    alert('Thanks for joining!');
+                    showNotification('Thanks for joining!', 'success');
                     emailInput.value = '';
                 } else {
-                    alert(data.error || 'Signup failed');
+                    showNotification(data.error || 'Signup failed', 'error');
                 }
             } catch (error) {
                 console.error('Newsletter error:', error);
-                alert('Connection error');
+                showNotification('Connection error', 'error');
             }
         }
 
@@ -655,6 +664,63 @@
         </div>
     </footer>
 
+
+    
+    
+    
+    
+    
+    
+    <script>
+        function handleAuthClick(e) {
+            e.preventDefault();
+            const userString = localStorage.getItem('user');
+            if (userString) {
+                localStorage.removeItem('user');
+                showNotification('Logged out successfully', 'success');
+                window.location.reload();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        function updateUIForUser() {
+            const userString = localStorage.getItem('user');
+            const authContainer = document.getElementById('auth-container');
+            
+            if (!authContainer) return;
+
+            if (userString) {
+                const user = JSON.parse(userString);
+                const firstName = user.name.split(' ')[0];
+                const initial = firstName.charAt(0).toUpperCase();
+
+                authContainer.innerHTML = `
+                    <div class="relative group">
+                        <button class="flex items-center gap-2.5 p-1 pr-3.5 rounded-full bg-white dark:bg-[#1A1C1E] border-[1.5px] border-[#1A1C1E] dark:border-white shadow-sm hover:opacity-90 transition-all active:scale-95 ml-2">
+                            <div class="w-8 h-8 rounded-full bg-[#1A1C1E] dark:bg-white text-white dark:text-[#1A1C1E] flex items-center justify-center font-bold text-[15px]">
+                                ${initial}
+                            </div>
+                            <span class="text-[15px] font-bold text-[#1F2937] dark:text-white hidden sm:block tracking-wide pt-0.5 ml-0.5">${firstName}</span>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-[#1A1C1E] rounded-xl shadow-xl border border-slate-100 dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[100]">
+                            <div class="p-1.5">
+                                <button onclick="handleLogout()" class="w-full text-center px-4 py-2.5 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                authContainer.innerHTML = `
+                    <button id="auth-btn" onclick="handleAuthClick(event)" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</button>
+                `;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateUIForUser);
+    </script>
 </body>
 
 </html>

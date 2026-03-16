@@ -5,12 +5,15 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>PETGO | Premium Pet Lifestyle &amp; Services</title>
+    
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="theme.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -25,10 +28,6 @@
                     fontFamily: {
                         display: ["'Plus Jakarta Sans'", "sans-serif"],
                         sans: ["'Plus Jakarta Sans'", "sans-serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.75rem",
-                        'full': "9999px",
                     },
                 },
             },
@@ -53,6 +52,7 @@
             background: rgba(15, 17, 19, 0.7);
         }
     </style>
+    <script src="notifications.js"></script>
 </head>
 
 <body
@@ -76,20 +76,16 @@
             </div>
             <div class="flex items-center space-x-4">
                 <button
-                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors hidden sm:block text-[#1A1C1E] dark:text-gray-100">
-                    <span class="material-icons-outlined material-symbols-outlined text-2xl">search</span>
-                </button>
-                <button
                     class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
-                    onclick="document.documentElement.classList.toggle('dark')">
-                    <span
-                        class="material-icons-outlined material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
-                    <span
-                        class="material-icons-outlined material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                    onclick="window.toggleTheme()">
+                    <span class="material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
                 </button>
-                <a href="#"
-                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
-                    style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                <div id="auth-container">
+                    <button id="auth-btn" onclick="toggleAuthModal()"
+                        class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
+                        style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -128,7 +124,7 @@
         <div
             class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce opacity-50">
             <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Scroll</span>
-            <span class="material-icons-outlined">expand_more</span>
+            <span class="material-symbols-outlined">expand_more</span>
         </div>
     </section>
     <section class="py-24 bg-white dark:bg-[#141618]">
@@ -137,7 +133,7 @@
                 <div class="group cursor-pointer">
                     <div
                         class="w-16 h-16 bg-background-light dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent transition-colors duration-300">
-                        <span class="material-icons-outlined text-3xl group-hover:text-white">commute</span>
+                        <span class="material-symbols-outlined text-3xl group-hover:text-white">commute</span>
                     </div>
                     <h3 class="text-2xl font-bold mb-3">Premium Pet Rides</h3>
                     <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Luxury transportation for your pets,
@@ -146,7 +142,7 @@
                 <div class="group cursor-pointer">
                     <div
                         class="w-16 h-16 bg-background-light dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent transition-colors duration-300">
-                        <span class="material-icons-outlined text-3xl group-hover:text-white">medical_services</span>
+                        <span class="material-symbols-outlined text-3xl group-hover:text-white">medical_services</span>
                     </div>
                     <h3 class="text-2xl font-bold mb-3">Emergency Care</h3>
                     <p class="text-gray-600 dark:text-gray-400 leading-relaxed">24/7 priority access to leading
@@ -155,7 +151,7 @@
                 <div class="group cursor-pointer">
                     <div
                         class="w-16 h-16 bg-background-light dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent transition-colors duration-300">
-                        <span class="material-icons-outlined text-3xl group-hover:text-white">spa</span>
+                        <span class="material-symbols-outlined text-3xl group-hover:text-white">spa</span>
                     </div>
                     <h3 class="text-2xl font-bold mb-3">Premium Essentials</h3>
                     <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Curated selection of high-end
@@ -258,6 +254,80 @@
         </div>
     </footer>
 
+    <!-- Auth Modal Overlay -->
+    <div id="auth-modal" class="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center opacity-0 invisible transition-all duration-300">
+        <!-- Auth Container -->
+        <div class="bg-white dark:bg-gray-900 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300 relative border border-slate-100 dark:border-slate-800">
+            <!-- Close Button -->
+            <button onclick="toggleAuthModal()" class="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors z-10">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+
+            <!-- Login Form -->
+            <div id="login-form" class="p-8">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Welcome Back</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">Sign in to access your PETGO account</p>
+                </div>
+                
+                <form onsubmit="event.preventDefault(); handleLogin();" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
+                        <input type="email" id="login-email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" style="color: black;">
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
+                            <a href="#" class="text-sm font-semibold text-primary dark:text-[#D4B996] hover:underline">Forgot?</a>
+                        </div>
+                        <input type="password" id="login-password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" style="color: black;">
+                    </div>
+                    
+                    <button type="submit" class="w-full py-3.5 px-4 bg-primary dark:bg-[#D4B996] text-white dark:text-primary font-bold rounded-xl hover:opacity-90 transition-colors shadow-lg mt-6">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="mt-8 text-center text-sm font-medium text-slate-600 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-6">
+                    Don't have an account? 
+                    <button onclick="switchAuth('register')" class="text-primary dark:text-[#D4B996] font-bold hover:underline ml-1">Create one</button>
+                </div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="p-8 hidden">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Create Account</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-sm">Join the PETGO ecosystem</p>
+                </div>
+                
+                <form onsubmit="event.preventDefault(); handleRegister();" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Full Name</label>
+                        <input type="text" id="reg-name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" style="color: black;">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Email Address</label>
+                        <input type="email" id="reg-email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" style="color: black;">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
+                        <input type="password" id="reg-password" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none" style="color: black;">
+                    </div>
+                    
+                    <button type="submit" class="w-full py-3.5 px-4 bg-primary dark:bg-[#D4B996] text-white dark:text-primary font-bold rounded-xl hover:opacity-90 transition-colors shadow-lg mt-6">
+                        Create Account
+                    </button>
+                </form>
+
+                <div class="mt-8 text-center text-sm font-medium text-slate-600 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-6">
+                    Already have an account? 
+                    <button onclick="switchAuth('login')" class="text-primary dark:text-[#D4B996] font-bold hover:underline ml-1">Sign in</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         async function signupNewsletter() {
             const emailInput = document.getElementById('newsletterEmail');
@@ -271,13 +341,147 @@
                     body: JSON.stringify({ email })
                 });
                 const data = await response.json();
-                alert(data.message);
+                showNotification(data.message, 'info');
                 if (data.success) emailInput.value = '';
             } catch (err) {
                 console.error('Newsletter error:', err);
-                alert('Could not connect to server.');
+                showNotification('Could not connect to server.', 'error');
             }
         }
+
+        function toggleAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            const container = modal.querySelector('div');
+            
+            if (modal.classList.contains('opacity-0')) {
+                modal.classList.remove('opacity-0', 'invisible');
+                setTimeout(() => container.classList.remove('scale-95'), 10);
+            } else {
+                container.classList.add('scale-95');
+                setTimeout(() => modal.classList.add('opacity-0', 'invisible'), 300);
+            }
+        }
+
+        function switchAuth(type) {
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+            if (type === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const host = window.location.hostname;
+                const API_BASE = (host === '127.0.0.1' || host === 'localhost') ? 'http://' + host + ':3000' : '';
+                
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    updateUIForUser();
+                    toggleAuthModal();
+                    showNotification('Login successful!', 'success');
+                } else {
+                    showNotification(data.error || 'Login failed', 'error');
+                }
+            } catch (err) {
+                console.error('Auth error:', err);
+                showNotification('Connection error. Is the backend running?', 'error');
+            }
+        }
+
+        async function handleRegister() {
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            if (!name || !email || !password) {
+                showNotification('Please fill in all fields', 'info');
+                return;
+            }
+
+            try {
+                const host = window.location.hostname;
+                const API_BASE = (host === '127.0.0.1' || host === 'localhost') ? 'http://' + host + ':3000' : '';
+                
+                const response = await fetch(`${API_BASE}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    showNotification('Registration successful! Please sign in.', 'success');
+                    switchAuth('login');
+                } else {
+                    showNotification(data.error || 'Registration failed', 'error');
+                }
+            } catch (err) {
+                console.error('Auth error:', err);
+                showNotification('Connection error. Is the backend running?', 'error');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('user');
+            updateUIForUser();
+            showNotification('Logged out successfully', 'success');
+            // update other tabs if needed by reloading, or just relying on updateUIForUser
+            window.location.reload();
+        }
+
+        function updateUIForUser() {
+            const userString = localStorage.getItem('user');
+            const authContainer = document.getElementById('auth-container');
+            
+            if (!authContainer) return;
+
+            if (userString) {
+                const user = JSON.parse(userString);
+                const firstName = user.name.split(' ')[0];
+                const initial = firstName.charAt(0).toUpperCase();
+
+                authContainer.innerHTML = `
+                    <div class="relative group">
+                        <button class="flex items-center gap-2.5 p-1 pr-3.5 rounded-full bg-white dark:bg-[#1A1C1E] border-[1.5px] border-[#1A1C1E] dark:border-white shadow-sm hover:opacity-90 transition-all active:scale-95 ml-2">
+                            <div class="w-8 h-8 rounded-full bg-[#1A1C1E] dark:bg-white text-white dark:text-[#1A1C1E] flex items-center justify-center font-bold text-[15px]">
+                                ${initial}
+                            </div>
+                            <span class="text-[15px] font-bold text-[#1F2937] dark:text-white hidden sm:block tracking-wide pt-0.5 ml-0.5">${firstName}</span>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-[#1A1C1E] rounded-xl shadow-xl border border-slate-100 dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[100]">
+                            <div class="p-1.5">
+                                <button onclick="handleLogout()" class="w-full text-center px-4 py-2.5 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                authContainer.innerHTML = `
+                    <button id="auth-btn" onclick="toggleAuthModal()" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</button>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateUIForUser);
         // Add some basic scroll interaction for the nav
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('nav');

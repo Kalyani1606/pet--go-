@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <script src="theme.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us | PETGO - Urban Pet Ecosystem</title>
@@ -50,21 +51,27 @@
             transform: translateY(0);
         }
     </style>
+    
     <script>
         tailwind.config = {
-            darkMode: 'class',
+            darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        primary: '#1A1C1E',
-                        accent: '#D4B996',
-                        'background-light': '#F8F7F4',
-                        'background-dark': '#0F1113',
-                    }
-                }
-            }
-        }
+                        primary: "#1A1C1E",
+                        "background-light": "#F8F7F4",
+                        "background-dark": "#0F1113",
+                        accent: "#D4B996",
+                    },
+                    fontFamily: {
+                        display: ["'Plus Jakarta Sans'", "sans-serif"],
+                        sans: ["'Plus Jakarta Sans'", "sans-serif"],
+                    },
+                },
+            },
+        };
     </script>
+    <script src="notifications.js"></script>
 </head>
 
 <body
@@ -87,21 +94,16 @@
                     href="contact.html">Contact Us</a>
             </div>
             <div class="flex items-center space-x-4">
-                <button
-                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors hidden sm:block text-[#1A1C1E] dark:text-gray-100">
-                    <span class="material-icons-outlined material-symbols-outlined text-2xl">search</span>
-                </button>
+                
                 <button
                     class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
-                    onclick="document.documentElement.classList.toggle('dark')">
-                    <span
-                        class="material-icons-outlined material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
-                    <span
-                        class="material-icons-outlined material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                    onclick="window.toggleTheme()">
+                    <span class="material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
                 </button>
-                <a href="#"
-                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
-                    style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                <div id="auth-container">
+                    <a id="auth-btn" onclick="handleAuthClick(event)" href="#" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -115,9 +117,9 @@
                 class="absolute inset-0 bg-gradient-to-tr from-background-light via-background-light/80 to-transparent dark:from-background-dark dark:via-background-dark/90 dark:to-transparent">
             </div>
             <!-- Ambient Glows -->
-            <div class="absolute top-1/4 -right-20 w-96 h-96 bg-accent/10 rounded-full blur-[120px] animate-pulse">
+            <div class="absolute top-1/4 -right-20 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse">
             </div>
-            <div class="absolute bottom-1/4 -left-20 w-96 h-96 bg-accent/5 rounded-full blur-[120px] animate-pulse"
+            <div class="absolute bottom-1/4 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-[120px] animate-pulse"
                 style="animation-delay: 2s;"></div>
         </div>
 
@@ -127,10 +129,10 @@
                 <div class="lg:col-span-5 space-y-12">
                     <div class="reveal">
                         <span
-                            class="inline-block py-1 px-3 rounded-full bg-accent/20 text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Concierge
+                            class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary dark:text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Concierge
                             Services</span>
                         <h1 class="text-6xl font-extrabold mb-8 tracking-tighter leading-tight">Your Journey <br><span
-                                class="text-accent underline decoration-1 underline-offset-8">Starts Here</span></h1>
+                                class="text-primary underline decoration-2 underline-offset-8">Starts Here</span></h1>
                         <p class="text-gray-500 dark:text-gray-400 text-lg leading-relaxed max-w-md">Our global
                             concierge team is dedicated to providing flawless mobility and care for your most precious
                             companions. We respond to every request with the same urgency as a sudden emergency.</p>
@@ -141,7 +143,7 @@
                             class="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500">
                             <div class="flex items-center gap-6">
                                 <div
-                                    class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
+                                    class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
                                     <span class="material-symbols-outlined text-3xl">phone_in_talk</span>
                                 </div>
                                 <div>
@@ -156,7 +158,7 @@
                             class="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500">
                             <div class="flex items-center gap-6">
                                 <div
-                                    class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
+                                    class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
                                     <span class="material-symbols-outlined text-3xl">alternate_email</span>
                                 </div>
                                 <div>
@@ -171,7 +173,7 @@
                             class="group p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-white/5 backdrop-blur-sm hover:border-accent transition-all duration-500">
                             <div class="flex items-center gap-6">
                                 <div
-                                    class="w-14 h-14 rounded-2xl bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
+                                    class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-accent group-hover:bg-accent group-hover:text-white group-hover:rotate-12 transition-all duration-500">
                                     <span class="material-symbols-outlined text-3xl">distance</span>
                                 </div>
                                 <div>
@@ -483,6 +485,63 @@
                 input.closest('.space-y-3').querySelector('label').classList.remove('text-accent');
             });
         });
+    </script>
+
+    
+    
+    
+    
+    
+    
+    <script>
+        function handleAuthClick(e) {
+            e.preventDefault();
+            const userString = localStorage.getItem('user');
+            if (userString) {
+                localStorage.removeItem('user');
+                showNotification('Logged out successfully', 'success');
+                window.location.reload();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        function updateUIForUser() {
+            const userString = localStorage.getItem('user');
+            const authContainer = document.getElementById('auth-container');
+            
+            if (!authContainer) return;
+
+            if (userString) {
+                const user = JSON.parse(userString);
+                const firstName = user.name.split(' ')[0];
+                const initial = firstName.charAt(0).toUpperCase();
+
+                authContainer.innerHTML = `
+                    <div class="relative group">
+                        <button class="flex items-center gap-2.5 p-1 pr-3.5 rounded-full bg-white dark:bg-[#1A1C1E] border-[1.5px] border-[#1A1C1E] dark:border-white shadow-sm hover:opacity-90 transition-all active:scale-95 ml-2">
+                            <div class="w-8 h-8 rounded-full bg-[#1A1C1E] dark:bg-white text-white dark:text-[#1A1C1E] flex items-center justify-center font-bold text-[15px]">
+                                ${initial}
+                            </div>
+                            <span class="text-[15px] font-bold text-[#1F2937] dark:text-white hidden sm:block tracking-wide pt-0.5 ml-0.5">${firstName}</span>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-[#1A1C1E] rounded-xl shadow-xl border border-slate-100 dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[100]">
+                            <div class="p-1.5">
+                                <button onclick="handleLogout()" class="w-full text-center px-4 py-2.5 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                authContainer.innerHTML = `
+                    <button id="auth-btn" onclick="handleAuthClick(event)" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</button>
+                `;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateUIForUser);
     </script>
 </body>
 

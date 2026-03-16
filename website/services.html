@@ -2,15 +2,18 @@
 <html class="scroll-smooth" lang="en">
 
 <head>
+    <script src="theme.js"></script>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>PETGO | Our Services</title>
+    
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -53,6 +56,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
+    <script src="notifications.js"></script>
 </head>
 
 <body
@@ -75,21 +79,16 @@
                     href="contact.html">Contact Us</a>
             </div>
             <div class="flex items-center space-x-4">
-                <button
-                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors hidden sm:block text-[#1A1C1E] dark:text-gray-100">
-                    <span class="material-icons-outlined material-symbols-outlined text-2xl">search</span>
-                </button>
+                
                 <button
                     class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
-                    onclick="document.documentElement.classList.toggle('dark')">
-                    <span
-                        class="material-icons-outlined material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
-                    <span
-                        class="material-icons-outlined material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                    onclick="window.toggleTheme()">
+                    <span class="material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
                 </button>
-                <a href="#"
-                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
-                    style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                <div id="auth-container">
+                    <a id="auth-btn" onclick="handleAuthClick(event)" href="#" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -118,7 +117,7 @@
                     </div>
                     <div class="p-8">
                         <div class="flex items-center gap-3 mb-4">
-                            <span class="material-icons-outlined text-accent text-3xl">local_taxi</span>
+                            <span class="material-symbols-outlined text-accent text-3xl">local_taxi</span>
                             <h3 class="text-2xl font-bold">Ride Booking</h3>
                         </div>
                         <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">Luxury door-to-door
@@ -126,7 +125,7 @@
                             features.</p>
                         <a href="ride-booking-1.html"
                             class="inline-flex items-center gap-2 text-primary dark:text-white font-bold hover:text-accent dark:hover:text-accent transition-colors">
-                            Book a Ride <span class="material-icons-outlined">arrow_forward</span>
+                            Book a Ride <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
                 </div>
@@ -141,14 +140,14 @@
                     </div>
                     <div class="p-8">
                         <div class="flex items-center gap-3 mb-4">
-                            <span class="material-icons-outlined text-accent text-3xl">medical_services</span>
+                            <span class="material-symbols-outlined text-accent text-3xl">medical_services</span>
                             <h3 class="text-2xl font-bold">Ambulance</h3>
                         </div>
                         <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">24/7 dedicated pet emergency
                             ambulance service. Priority medical transport with trained handlers on board.</p>
                         <a href="ambulance.html"
                             class="inline-flex items-center gap-2 text-primary dark:text-white font-bold hover:text-accent dark:hover:text-accent transition-colors">
-                            Call Urgent <span class="material-icons-outlined">arrow_forward</span>
+                            Call Urgent <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
                 </div>
@@ -163,14 +162,14 @@
                     </div>
                     <div class="p-8">
                         <div class="flex items-center gap-3 mb-4">
-                            <span class="material-icons-outlined text-accent text-3xl">shopping_bag</span>
+                            <span class="material-symbols-outlined text-accent text-3xl">shopping_bag</span>
                             <h3 class="text-2xl font-bold">Essentials</h3>
                         </div>
                         <p class="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">High-end curated boutique
                             featuring premium food, designer accessories, and luxury wellness products.</p>
                         <a href="store.html"
                             class="inline-flex items-center gap-2 text-primary dark:text-white font-bold hover:text-accent dark:hover:text-accent transition-colors">
-                            Visit Shop <span class="material-icons-outlined">arrow_forward</span>
+                            Visit Shop <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
                 </div>
@@ -287,7 +286,7 @@
             const emailInput = document.getElementById('newsletter-email');
             const email = emailInput.value.trim();
             if (!email) {
-                alert('Please enter your email');
+                showNotification('Please enter your email', 'info');
                 return;
             }
 
@@ -300,18 +299,75 @@
 
                 const data = await response.json();
                 if (response.ok) {
-                    alert('Thanks for joining!');
+                    showNotification('Thanks for joining!', 'success');
                     emailInput.value = '';
                 } else {
-                    alert(data.error || 'Signup failed');
+                    showNotification(data.error || 'Signup failed', 'error');
                 }
             } catch (error) {
                 console.error('Newsletter error:', error);
-                alert('Connection error');
+                showNotification('Connection error', 'error');
             }
         }
     </script>
 
+
+    
+    
+    
+    
+    
+    
+    <script>
+        function handleAuthClick(e) {
+            e.preventDefault();
+            const userString = localStorage.getItem('user');
+            if (userString) {
+                localStorage.removeItem('user');
+                showNotification('Logged out successfully', 'success');
+                window.location.reload();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        function updateUIForUser() {
+            const userString = localStorage.getItem('user');
+            const authContainer = document.getElementById('auth-container');
+            
+            if (!authContainer) return;
+
+            if (userString) {
+                const user = JSON.parse(userString);
+                const firstName = user.name.split(' ')[0];
+                const initial = firstName.charAt(0).toUpperCase();
+
+                authContainer.innerHTML = `
+                    <div class="relative group">
+                        <button class="flex items-center gap-2.5 p-1 pr-3.5 rounded-full bg-white dark:bg-[#1A1C1E] border-[1.5px] border-[#1A1C1E] dark:border-white shadow-sm hover:opacity-90 transition-all active:scale-95 ml-2">
+                            <div class="w-8 h-8 rounded-full bg-[#1A1C1E] dark:bg-white text-white dark:text-[#1A1C1E] flex items-center justify-center font-bold text-[15px]">
+                                ${initial}
+                            </div>
+                            <span class="text-[15px] font-bold text-[#1F2937] dark:text-white hidden sm:block tracking-wide pt-0.5 ml-0.5">${firstName}</span>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-[#1A1C1E] rounded-xl shadow-xl border border-slate-100 dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[100]">
+                            <div class="p-1.5">
+                                <button onclick="handleLogout()" class="w-full text-center px-4 py-2.5 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                authContainer.innerHTML = `
+                    <button id="auth-btn" onclick="handleAuthClick(event)" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</button>
+                `;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateUIForUser);
+    </script>
 </body>
 
 </html>

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <script src="theme.js"></script>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>PETGO | Premium Pet Essentials Store</title>
@@ -13,24 +14,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    
     <script>
         tailwind.config = {
             darkMode: "class",
             theme: {
                 extend: {
                     colors: {
-                        primary: "#1A1A1A",
-                        "background-light": "#F9F8F6",
-                        "background-dark": "#121212",
-                        "accent": "#D4C5B9",
+                        primary: "#1A1C1E",
+                        "background-light": "#F8F7F4",
+                        "background-dark": "#0F1113",
+                        accent: "#D4B996",
                     },
                     fontFamily: {
-                        display: ["Outfit", "sans-serif"],
-                        serif: ["Playfair Display", "serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "12px",
-                        "large": "24px",
+                        display: ["'Plus Jakarta Sans'", "sans-serif"],
+                        sans: ["'Plus Jakarta Sans'", "sans-serif"],
                     },
                 },
             },
@@ -116,6 +114,7 @@
             }
         }
     </style>
+    <script src="notifications.js"></script>
 </head>
 
 <body
@@ -138,15 +137,22 @@
                     href="contact.html">Contact Us</a>
             </div>
             <div class="flex items-center space-x-4">
+                
+                <button
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100"
+                    onclick="window.toggleTheme()">
+                    <span class="material-symbols-outlined text-2xl dark:hidden">dark_mode</span>
+                    <span class="material-symbols-outlined text-2xl hidden dark:inline">light_mode</span>
+                </button>
                 <button id="cartBtn"
                     class="relative p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors text-[#1A1C1E] dark:text-gray-100">
-                    <span class="material-icons-outlined material-symbols-outlined text-2xl">shopping_bag</span>
+                    <span class="material-symbols-outlined text-2xl">shopping_bag</span>
                     <span id="cartCountBadge"
-                        class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full hidden">0</span>
+                        class="absolute top-0 right-0 w-5 h-5 bg-accent text-primary text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900 hidden">0</span>
                 </button>
-                <a href="#"
-                    class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide"
-                    style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                <div id="auth-container">
+                    <a id="auth-btn" onclick="handleAuthClick(event)" href="#" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -394,6 +400,7 @@
     <!-- Toast -->
     <div class="cart-toast" id="cartToast">✓ Added to cart!</div>
 
+
     <!-- Scripts -->
     <script src="products.js"></script>
     <script>
@@ -401,26 +408,30 @@
 
         let activePet = 'all';
         let activeCat = 'all';
-        let products = [];
 
         async function renderProducts() {
             const grid = document.getElementById('productGrid');
             const noRes = document.getElementById('noResults');
             const countEl = document.getElementById('productCount');
             
-            try {
-                // Fetch filtered products from backend
-                const url = `/api/products?pet=${activePet}&category=${activeCat}`;
-                const response = await fetch(url);
-                products = await response.json();
-            } catch (err) {
-                console.error('Fetch products error:', err);
-            }
+            if (!grid) return;
 
-            countEl.textContent = products.length + ' product' + (products.length !== 1 ? 's' : '');
-            if (products.length === 0) { grid.innerHTML = ''; noRes.classList.remove('hidden'); return; }
+            let filteredProducts = products.filter(p => {
+                const matchPet = activePet === 'all' || p.pet === activePet || (activePet === 'other' && !['dog','cat','rabbit','bird','fish','hamster','reptile'].includes(p.pet));
+                const matchCat = activeCat === 'all' || p.category === activeCat;
+                return matchPet && matchCat;
+            });
+
+            countEl.textContent = `${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`;
+            
+            if (filteredProducts.length === 0) {
+                grid.innerHTML = '';
+                noRes.classList.remove('hidden');
+                return;
+            }
+            
             noRes.classList.add('hidden');
-            grid.innerHTML = products.map((p, i) => `
+            grid.innerHTML = filteredProducts.map((p, i) => `
                 <div class="group" style="animation: fadeUp 0.4s ease ${i * 0.03}s both">
                     <div class="relative bg-white dark:bg-gray-900 rounded-[24px] overflow-hidden shadow-lg shadow-black/5 mb-4 aspect-[4/5]">
                         <img alt="${p.name}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
@@ -435,60 +446,59 @@
                             <h3 class="text-base font-semibold group-hover:text-accent transition-colors leading-snug">${p.name}</h3>
                             <span class="text-[10px] uppercase tracking-wider bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full text-gray-500 font-bold">${p.pet}</span>
                         </div>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm mb-2 line-clamp-1">${p.description}</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm mb-2 line-clamp-1">${p.desc || p.description}</p>
                         <p class="text-xl font-bold">₹${p.price.toLocaleString('en-IN')}</p>
                     </div>
                 </div>
             `).join('');
         }
 
-        function addToCart(productName) {
-            const product = products.find(p => p.name === productName);
-            if (!product) return;
-
-            const existingItem = cart.find(item => item.name === productName);
-            if (existingItem) {
-                existingItem.quantity += 1;
+        function addToCart(name) {
+            const product = products.find(p => p.name === name);
+            const inCart = cart.find(item => item.name === name);
+            if (inCart) {
+                inCart.quantity++;
             } else {
                 cart.push({ ...product, quantity: 1 });
             }
-
             updateCartUI();
             showToast('✓ Added to cart!');
         }
 
-        function removeFromCart(productName) {
-            cart = cart.filter(item => item.name !== productName);
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
             updateCartUI();
         }
 
-        function updateQuantity(productName, delta) {
-            const item = cart.find(i => i.name === productName);
+        function updateQuantity(name, delta) {
+            const item = cart.find(i => i.name === name);
             if (item) {
                 item.quantity += delta;
                 if (item.quantity <= 0) {
-                    removeFromCart(productName);
+                    removeFromCart(name);
                 } else {
                     updateCartUI();
                 }
             }
         }
 
-        function updateCartUI() {
+                function updateCartUI() {
             const list = document.getElementById('cartItemsList');
             const totalEl = document.getElementById('cartTotal');
             const badge = document.getElementById('cartCountBadge');
             const emptyMsg = document.getElementById('emptyCartMessage');
 
+            if (!list || !totalEl || !badge) return;
+
             if (cart.length === 0) {
                 list.innerHTML = '';
-                list.appendChild(emptyMsg);
+                if (emptyMsg) emptyMsg.classList.remove('hidden');
                 totalEl.textContent = '₹0';
                 badge.classList.add('hidden');
                 return;
             }
 
-            emptyMsg.remove();
+            if (emptyMsg) emptyMsg.classList.add('hidden');
             let total = 0;
             let itemCount = 0;
 
@@ -563,7 +573,19 @@
             const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             
             try {
-                const response = await fetch('/api/orders', {
+                const host = window.location.hostname;
+                const port = window.location.port;
+                
+                let fetchUrl = '/api/orders';
+                // If running on Live Server port 5500, 5501, 5502, route API to port 3000
+                if (port.startsWith('550')) {
+                    fetchUrl = `http://${host}:3000/api/orders`;
+                } else if (host === '127.0.0.1' || host === 'localhost') {
+                     // If already on 3000, use relative path to avoid CORS issues
+                    fetchUrl = '/api/orders';
+                }
+
+                const response = await fetch(fetchUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ items: cart, total })
@@ -571,16 +593,16 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    showToast('✅ Order placed successfully! ID: ' + data.orderId);
+                    showNotification('Order placed successfully! Your Order ID is: ' + data.orderId, 'success');
                     cart = [];
                     updateCartUI();
-                    setTimeout(() => toggleCart(false), 2000);
+                    toggleCart(false);
                 } else {
-                    showToast('❌ Failed to place order');
+                    showNotification('❌ Failed to place order. Please try again.', 'error');
                 }
             } catch (err) {
                 console.error('Checkout error:', err);
-                showToast('❌ Server connection error');
+                showNotification('❌ Server connection error. Please make sure the backend is running.', 'error');
             }
         }
 
@@ -613,6 +635,63 @@
         });
 
         renderProducts();
+    </script>
+
+    
+    
+    
+    
+    
+    
+    <script>
+        function handleAuthClick(e) {
+            e.preventDefault();
+            const userString = localStorage.getItem('user');
+            if (userString) {
+                localStorage.removeItem('user');
+                showNotification('Logged out successfully', 'success');
+                window.location.reload();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        function updateUIForUser() {
+            const userString = localStorage.getItem('user');
+            const authContainer = document.getElementById('auth-container');
+            
+            if (!authContainer) return;
+
+            if (userString) {
+                const user = JSON.parse(userString);
+                const firstName = user.name.split(' ')[0];
+                const initial = firstName.charAt(0).toUpperCase();
+
+                authContainer.innerHTML = `
+                    <div class="relative group">
+                        <button class="flex items-center gap-2.5 p-1 pr-3.5 rounded-full bg-white dark:bg-[#1A1C1E] border-[1.5px] border-[#1A1C1E] dark:border-white shadow-sm hover:opacity-90 transition-all active:scale-95 ml-2">
+                            <div class="w-8 h-8 rounded-full bg-[#1A1C1E] dark:bg-white text-white dark:text-[#1A1C1E] flex items-center justify-center font-bold text-[15px]">
+                                ${initial}
+                            </div>
+                            <span class="text-[15px] font-bold text-[#1F2937] dark:text-white hidden sm:block tracking-wide pt-0.5 ml-0.5">${firstName}</span>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-[#1A1C1E] rounded-xl shadow-xl border border-slate-100 dark:border-gray-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right group-hover:translate-y-0 translate-y-2 z-[100]">
+                            <div class="p-1.5">
+                                <button onclick="handleLogout()" class="w-full text-center px-4 py-2.5 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                authContainer.innerHTML = `
+                    <button id="auth-btn" onclick="handleAuthClick(event)" class="ml-2 px-6 py-2.5 rounded-full bg-[#1A1C1E] text-white dark:bg-white dark:text-[#1A1C1E] text-sm font-bold hover:opacity-90 transition-colors shadow-none border border-black/10 dark:border-white/10 tracking-wide" style="font-family: 'Plus Jakarta Sans', sans-serif;">Sign In / Login</button>
+                `;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateUIForUser);
     </script>
 </body>
 
