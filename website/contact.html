@@ -13,7 +13,7 @@
     <style>
         :root {
             --primary: #1A1C1E;
-            --accent: #D4B996;
+            --accent: #9CA3AF;
             --bg-light: #F8F7F4;
             --bg-dark: #0F1113;
         }
@@ -61,7 +61,7 @@
                         primary: "#1A1C1E",
                         "background-light": "#F8F7F4",
                         "background-dark": "#0F1113",
-                        accent: "#D4B996",
+                        accent: "#9CA3AF",
                     },
                     fontFamily: {
                         display: ["'Plus Jakarta Sans'", "sans-serif"],
@@ -84,13 +84,13 @@
                     style="font-family: 'Plus Jakarta Sans', sans-serif;">PETGO</a>
             </div>
             <div class="hidden md:flex items-center space-x-8" style="font-family: 'Plus Jakarta Sans', sans-serif;">
-                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-gray-400 transition-colors"
                     href="index.html">Home</a>
-                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-gray-400 transition-colors"
                     href="services.html">Services</a>
-                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-gray-400 transition-colors"
                     href="about.html">About Us</a>
-                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-[#D4B996] transition-colors"
+                <a class="text-sm font-semibold text-[#1A1C1E] dark:text-gray-100 hover:text-gray-400 transition-colors"
                     href="contact.html">Contact Us</a>
             </div>
             <div class="flex items-center space-x-4">
@@ -129,7 +129,7 @@
                 <div class="lg:col-span-5 space-y-12">
                     <div class="reveal">
                         <span
-                            class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary dark:text-accent text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Concierge
+                            class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary dark:text-gray-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">Concierge
                             Services</span>
                         <h1 class="text-6xl font-extrabold mb-8 tracking-tighter leading-tight">Your Journey <br><span
                                 class="text-primary underline decoration-2 underline-offset-8">Starts Here</span></h1>
@@ -203,7 +203,7 @@
 
                             <h2 class="text-3xl font-bold mb-8 flex items-center gap-3">
                                 Send a Request
-                                <span class="w-1.5 h-1.5 rounded-full bg-accent animate-ping"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-ping"></span>
                             </h2>
 
                             <form class="space-y-8">
@@ -264,7 +264,7 @@
                                 </div>
 
                                 <button type="button" onclick="submitContact()"
-                                    class="group relative w-full py-6 bg-primary dark:bg-accent text-white dark:text-primary font-bold rounded-xl overflow-hidden transition-all hover:shadow-[0_20px_40px_rgba(212,185,150,0.3)] dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] active:scale-95">
+                                    class="group relative w-full py-6 bg-primary dark:bg-gray-400 text-white dark:text-primary font-bold rounded-xl overflow-hidden transition-all hover:shadow-[0_20px_40px_rgba(156,163,175,0.3)] dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] active:scale-95">
                                     <span class="relative z-10 flex items-center justify-center gap-3">
                                         Submit Request
                                         <span
@@ -296,7 +296,7 @@
             <div class="reveal space-y-6">
                 <div class="group border-b border-gray-200 dark:border-gray-800 pb-4">
                     <button
-                        class="w-full flex items-center justify-between py-6 text-left hover:text-accent transition-colors">
+                        class="w-full flex items-center justify-between py-6 text-left hover:text-gray-400 transition-colors">
                         <span class="font-bold text-lg">What are your concierge hours?</span>
                         <span class="material-symbols-outlined group-hover:rotate-45 transition-transform">add</span>
                     </button>
@@ -310,7 +310,7 @@
 
                 <div class="group border-b border-gray-200 dark:border-gray-800 pb-4">
                     <button
-                        class="w-full flex items-center justify-between py-6 text-left hover:text-accent transition-colors">
+                        class="w-full flex items-center justify-between py-6 text-left hover:text-gray-400 transition-colors">
                         <span class="font-bold text-lg">Do you handle international pet relocation?</span>
                         <span class="material-symbols-outlined group-hover:rotate-45 transition-transform">add</span>
                     </button>
@@ -324,7 +324,7 @@
 
                 <div class="group border-b border-gray-200 dark:border-gray-800 pb-4">
                     <button
-                        class="w-full flex items-center justify-between py-6 text-left hover:text-accent transition-colors">
+                        class="w-full flex items-center justify-between py-6 text-left hover:text-gray-400 transition-colors">
                         <span class="font-bold text-lg">How quickly can you dispatch an ambulance?</span>
                         <span class="material-symbols-outlined group-hover:rotate-45 transition-transform">add</span>
                     </button>
@@ -479,10 +479,10 @@
         const inputs = document.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
             input.addEventListener('focus', () => {
-                input.closest('.space-y-3').querySelector('label').classList.add('text-accent');
+                input.closest('.space-y-3').querySelector('label').classList.add('text-gray-400');
             });
             input.addEventListener('blur', () => {
-                input.closest('.space-y-3').querySelector('label').classList.remove('text-accent');
+                input.closest('.space-y-3').querySelector('label').classList.remove('text-gray-400');
             });
         });
     </script>
