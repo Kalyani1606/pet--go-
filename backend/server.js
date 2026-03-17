@@ -26,8 +26,9 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Fallback: serve index.html for any unmatched routes
-app.use((req, res) => {
+// Fallback: serve index.html for any unmatched non-API routes
+// Using a regex literal in Express 5 avoids "PathError" from the string parser
+app.get(/^(?!\/api).*/, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'website', 'index.html'));
 });
 
